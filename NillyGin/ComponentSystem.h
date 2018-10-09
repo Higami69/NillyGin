@@ -1,0 +1,155 @@
+#pragma once
+#include "Singleton.h"
+#include "DataBlockSoa.h"
+#include <vector>
+#include <thread>
+#include <map>
+#include "SystemManager.h"
+
+class ComponentSystemInterface
+{
+public:
+	virtual ~ComponentSystemInterface()
+	{
+	}
+
+	virtual void Update() = 0;
+	virtual void LateUpdate() = 0;
+	virtual void CleanUp() = 0;
+};
+
+template<typename T>
+class ComponentSystem : public ComponentSystemInterface
+{
+public:
+	ComponentSystem();
+	virtual ~ComponentSystem();
+
+	void AddComponent(size_t entity, const typename T::Aos& component);
+
+	void Update() override;
+	void LateUpdate() override;
+	void CleanUp() override;
+
+	virtual void OnUpdate(typename T::Soa* component, size_t entity) = 0;
+	virtual void OnLateUpdate(typename T::Soa* component, size_t entity) = 0;
+	virtual void OnCleanUp(typename T::Soa* component) = 0;
+private:
+	void MarkGarbage();
+	void CollectGarbage();
+
+private:
+	std::thread m_GarbageMarker;
+	std::vector<size_t> m_CompsToDelete;
+
+	DataBlockSoa<T> m_Components;
+	std::map<size_t,size_t> m_EntityComponentLinks; //left = ComponentId, right = EntityId
+};
+
+template <typename T>
+ComponentSystem<T>::ComponentSystem()
+{
+	SystemManager::GetInstance()->AddSystem(this);
+}
+
+template <typename T>
+ComponentSystem<T>::~ComponentSystem()
+{
+}
+
+template <typename T>
+void ComponentSystem<T>::AddComponent(size_t entity, const typename T::Aos& component)
+{
+	size_t compIdx = m_Components.Add(component);
+	m_EntityComponentLinks[compIdx] = entity;
+}
+
+template <typename T>
+void ComponentSystem<T>::Update()
+{
+	if (m_Components.GetSize() > 0)
+	{
+		auto entityManager = EntityManager::GetInstance();
+		m_GarbageMarker = std::thread(&ComponentSystem<T>::MarkGarbage, this);
+
+		size_t entity = 0;
+		for (size_t i = 0; i < m_Components.GetSize(); i++)
+		{
+			entity = m_EntityComponentLinks[i];
+			if (entityManager->IsAlive(entity))
+			{
+				OnUpdate(&m_Components.GetSoa(i), entity);
+			}
+		}
+	}
+}
+
+template <typename T>
+void ComponentSystem<T>::LateUpdate()
+{
+	if (m_Components.GetSize() > 0)
+	{
+		auto entityManager = EntityManager::GetInstance();
+
+		size_t entity = 0;
+		for (size_t i = 0; i < m_Components.GetSize(); i++)
+		{
+			entity = m_EntityComponentLinks[i];
+			if (entityManager->IsAlive(entity))
+			{
+				OnLateUpdate(&m_Components.GetSoa(i), entity);
+			}
+		}
+
+		m_GarbageMarker.join();
+		CollectGarbage();
+	}
+}
+
+template <typename T>
+void ComponentSystem<T>::CleanUp()
+{
+	auto entityManager = EntityManager::GetInstance();
+
+	for (size_t i = 0; i < m_Components.GetSize(); i++)
+	{
+		OnCleanUp(&m_Components.GetSoa(i));
+	}
+}
+
+template <typename T>
+void ComponentSystem<T>::MarkGarbage()
+{
+	size_t aliveInRow = 0;
+	auto entityManager = EntityManager::GetInstance();
+	auto links = m_EntityComponentLinks;
+
+		while (!links.empty() && aliveInRow < 4)
+		{
+			size_t idx = rand() % links.size();
+			auto it = links.begin();
+			std::advance(it, idx);
+
+			if (entityManager->IsAlive((*it).second))
+			{
+				++aliveInRow;
+				continue;
+			}
+
+			aliveInRow = 0;
+			m_CompsToDelete.push_back((*it).first);
+			links.erase(it);
+		}
+}
+
+template <typename T>
+void ComponentSystem<T>::CollectGarbage()
+{
+	for(size_t i : m_CompsToDelete)
+	{
+		size_t last = m_Components.Remove(i);
+		m_EntityComponentLinks[i] = m_EntityComponentLinks[last];
+		m_EntityComponentLinks.erase(m_EntityComponentLinks.find(last));
+	}
+	m_CompsToDelete.clear();
+}
