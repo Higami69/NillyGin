@@ -1,7 +1,9 @@
 #include "pch.h"
 #include "SystemManager.h"
 #include "ComponentSystem.h"
+#include "TransformComponent.h"
 #include <algorithm>
+#include "TransformComponentSystem.h"
 
 void SystemManager::AddSystem(ComponentSystemInterface* system)
 {
@@ -74,4 +76,9 @@ void SystemManager::CleanUp()
 	}
 	m_Threads.clear();
 	m_pSystems.clear();
+}
+
+TransformComponent::Aos SystemManager::GetTransform(size_t entity)
+{
+	return ((TransformComponentSystem*)m_pTransformSystem)->GetTransform(entity);
 }

@@ -116,7 +116,7 @@ class RektSystem : public ComponentSystem<Rekt>
 
 int main()
 {
-	srand(size_t(time(nullptr)));
+	srand(unsigned int(time(nullptr)));
 	auto entityManager = EntityManager::GetInstance();
 	auto systemManager = SystemManager::GetInstance();
 	FooSystem foo{};
@@ -130,7 +130,7 @@ int main()
 			size_t idx = entityManager->Create();
 			foo.AddComponent(idx, Foo::Aos{});
 			bar.AddComponent(idx, Bar::Aos{});
-			//if ((rand() % 5) == 0) rekt.AddComponent(idx, Rekt::Aos{});
+			if ((rand() % 5) == 0) rekt.AddComponent(idx, Rekt::Aos{});
 		}
 		
 		entityManager->Destroy(i);

@@ -5,6 +5,8 @@
 #include <thread>
 #include <map>
 #include "SystemManager.h"
+#include "EntityManager.h"
+#include <algorithm>
 
 class ComponentSystemInterface
 {
@@ -16,6 +18,8 @@ public:
 	virtual void Update() = 0;
 	virtual void LateUpdate() = 0;
 	virtual void CleanUp() = 0;
+
+	virtual size_t GetComponentIndex(size_t entity) = 0;
 };
 
 template<typename T>
@@ -31,9 +35,15 @@ public:
 	void LateUpdate() override;
 	void CleanUp() override;
 
+	size_t GetComponentIndex(size_t entity) override;
+
 	virtual void OnUpdate(typename T::Soa* component, size_t entity) = 0;
 	virtual void OnLateUpdate(typename T::Soa* component, size_t entity) = 0;
 	virtual void OnCleanUp(typename T::Soa* component) = 0;
+
+protected:
+	DataBlockSoa<T> m_Components;
+
 private:
 	void MarkGarbage();
 	void CollectGarbage();
@@ -42,7 +52,6 @@ private:
 	std::thread m_GarbageMarker;
 	std::vector<size_t> m_CompsToDelete;
 
-	DataBlockSoa<T> m_Components;
 	std::map<size_t,size_t> m_EntityComponentLinks; //left = ComponentId, right = EntityId
 };
 
@@ -115,6 +124,12 @@ void ComponentSystem<T>::CleanUp()
 	{
 		OnCleanUp(&m_Components.GetSoa(i));
 	}
+}
+
+template <typename T>
+size_t ComponentSystem<T>::GetComponentIndex(size_t entity)
+{
+	return std::find_if(m_EntityComponentLinks.begin(), m_EntityComponentLinks.end(), [entity](const auto& link) {return entity == link.second; })->second;
 }
 
 template <typename T>

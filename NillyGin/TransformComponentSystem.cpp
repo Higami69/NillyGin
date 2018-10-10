@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "TransformComponent.h"
+#include "TransformComponentSystem.h"
 
 TransformComponentSystem::TransformComponentSystem()
 {
@@ -19,4 +19,9 @@ void TransformComponentSystem::OnLateUpdate(TransformComponent::Soa* component, 
 
 void TransformComponentSystem::OnCleanUp(TransformComponent::Soa* component)
 {
+}
+
+TransformComponent::Aos TransformComponentSystem::GetTransform(size_t entity)
+{
+	return m_Components.GetAos(GetComponentIndex(entity));
 }

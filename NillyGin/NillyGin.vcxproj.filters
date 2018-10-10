@@ -39,6 +39,9 @@
     <ClInclude Include="TransformComponent.h">
       <Filter>Default Components</Filter>
     </ClInclude>
+    <ClInclude Include="TransformComponentSystem.h">
+      <Filter>Default Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -53,7 +56,7 @@
     <ClCompile Include="SystemManager.cpp">
       <Filter>ECS</Filter>
     </ClCompile>
-    <ClCompile Include="TransformComponent.cpp">
+    <ClCompile Include="TransformComponentSystem.cpp">
       <Filter>Default Components</Filter>
     </ClCompile>
   </ItemGroup>

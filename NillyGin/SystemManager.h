@@ -2,6 +2,8 @@
 #include "Singleton.h"
 #include <vector>
 #include <thread>
+#include "TransformComponent.h"
+
 
 class ComponentSystemInterface;
 
@@ -17,6 +19,8 @@ public:
 
 	void Update();
 	void CleanUp();
+
+	TransformComponent::Aos GetTransform(size_t entity);
 
 private:
 	ComponentSystemInterface* m_pTransformSystem = nullptr;
