@@ -82,7 +82,7 @@ void ComponentSystem<T>::Update()
 		m_GarbageMarker = std::thread(&ComponentSystem<T>::MarkGarbage, this);
 
 		size_t entity = 0;
-		for (size_t i = 0; i < m_Components.GetSize(); i++)
+		for (size_t i = 0; i < m_Components.GetSize(); ++i)
 		{
 			entity = m_EntityComponentLinks[i];
 			if (entityManager->IsAlive(entity))
@@ -101,7 +101,7 @@ void ComponentSystem<T>::LateUpdate()
 		auto entityManager = EntityManager::GetInstance();
 
 		size_t entity = 0;
-		for (size_t i = 0; i < m_Components.GetSize(); i++)
+		for (size_t i = 0; i < m_Components.GetSize(); ++i)
 		{
 			entity = m_EntityComponentLinks[i];
 			if (entityManager->IsAlive(entity))
@@ -120,7 +120,7 @@ void ComponentSystem<T>::CleanUp()
 {
 	auto entityManager = EntityManager::GetInstance();
 
-	for (size_t i = 0; i < m_Components.GetSize(); i++)
+	for (size_t i = 0; i < m_Components.GetSize(); ++i)
 	{
 		OnCleanUp(&m_Components.GetSoa(i));
 	}

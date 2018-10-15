@@ -168,8 +168,7 @@ size_t DataBlockSoa<T>::Remove(size_t index)
 		ForEachClassMethod<0, RemoveMember, DataBlockSoaTraits<T>::member_count>(this, index);
 	}
 
-	--m_Size;
-	return m_Size;
+	return --m_Size;
 }
 
 template <class T>
@@ -178,8 +177,7 @@ size_t DataBlockSoa<T>::Add(const typename T::Aos& data)
 	if (m_Size != m_AllocatedSize)
 	{
 		ForEachClassMethod<0, AddMember, DataBlockSoaTraits<T>::member_count>(this, data);
-		++m_Size;
-		return m_Size - 1;
+		return m_Size++;
 	}
 	Resize(m_AllocatedSize * 2);
 	m_AllocatedSize *= 2;

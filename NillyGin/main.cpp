@@ -114,35 +114,35 @@ class RektSystem : public ComponentSystem<Rekt>
 };
 #pragma endregion 
 
-int main()
-{
-	srand(unsigned int(time(nullptr)));
-	auto entityManager = EntityManager::GetInstance();
-	auto systemManager = SystemManager::GetInstance();
-	FooSystem foo{};
-	BarSystem bar{};
-	RektSystem rekt{};
-
-	for(size_t i = 0;i < 100u;i++)
-	{
-		for (size_t j = 0; j < 2; j++)
-		{
-			size_t idx = entityManager->Create();
-			foo.AddComponent(idx, Foo::Aos{});
-			bar.AddComponent(idx, Bar::Aos{});
-			if ((rand() % 5) == 0) rekt.AddComponent(idx, Rekt::Aos{});
-		}
-		
-		entityManager->Destroy(i);
-
-		systemManager->Update();
-		std::cout << std::endl;
-	}
-
-	systemManager->CleanUp();
-	EntityManager::DeleteInstance();
-	SystemManager::DeleteInstance();
-
-	system("pause");
-	return 0;
-}
+//int main()
+//{
+//	srand(unsigned int(time(nullptr)));
+//	auto entityManager = EntityManager::GetInstance();
+//	auto systemManager = SystemManager::GetInstance();
+//	FooSystem foo{};
+//	BarSystem bar{};
+//	RektSystem rekt{};
+//
+//	for(size_t i = 0;i < 100u;i++)
+//	{
+//		for (size_t j = 0; j < 2; j++)
+//		{
+//			size_t idx = entityManager->Create();
+//			foo.AddComponent(idx, Foo::Aos{});
+//			bar.AddComponent(idx, Bar::Aos{});
+//			if ((rand() % 5) == 0) rekt.AddComponent(idx, Rekt::Aos{});
+//		}
+//		
+//		entityManager->Destroy(i);
+//
+//		systemManager->Update();
+//		std::cout << std::endl;
+//	}
+//
+//	systemManager->CleanUp();
+//	EntityManager::DeleteInstance();
+//	SystemManager::DeleteInstance();
+//
+//	system("pause");
+//	return 0;
+//}
