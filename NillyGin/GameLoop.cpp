@@ -1,18 +1,11 @@
 #include "pch.h"
 #include "EntityManager.h"
 #include "SystemManager.h"
-#include <SDL.h>
-#include <SDL_opengl.h>
-#include <SDL_image.h>
 #include "TransformComponentSystem.h"
 #include "InputManager.h"
 #include "Tests.h"
+#include "Renderer.h"
 
-#pragma comment(lib, "SDL2.lib")
-#pragma comment(lib, "SDL2main.lib")
-#pragma comment (lib,"opengl32.lib")
-#pragma comment (lib,"Glu32.lib")
-#pragma comment(lib, "SDL2_image.lib")  
 
 int wmain(int argc, char *argv[])
 {
@@ -20,15 +13,8 @@ int wmain(int argc, char *argv[])
 	auto entityManager = EntityManager::GetInstance();
 	auto systemManager = SystemManager::GetInstance();
 	auto inputManager = InputManager::GetInstance();
-
-	SDL_Window* window = SDL_CreateWindow("Test", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_OPENGL);
-
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
-
-	SDL_GLContext context = SDL_GL_CreateContext(window);
-
-	glClearColor(0,0,0,1);
+	Renderer renderer{};
+	renderer.Initialize();
 
 	//Construct built in systems (so they're added to the systemManager)
 	TransformComponentSystem{};
@@ -56,14 +42,14 @@ int wmain(int argc, char *argv[])
 
 		systemManager->Update();
 		inputManager->ResetTriggerInputs();
-
-		glClear(GL_COLOR_BUFFER_BIT);
-		SDL_GL_SwapWindow(window);
+		
+		renderer.DrawRectangle(0, 0, 50, 50,Colour(1,0,0,1));
+		renderer.Display();
+		renderer.ClearBackground();
 	}
 
 	//CleanUp
-	SDL_GL_DeleteContext(context);
-	SDL_DestroyWindow(window);
+	renderer.CleanUp();
 	systemManager->CleanUp();
 	EntityManager::DeleteInstance();
 	InputManager::DeleteInstance();

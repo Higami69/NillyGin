@@ -1,0 +1,58 @@
+#include "pch.h"
+#include "Renderer.h"
+
+void Renderer::Initialize()
+{
+	SDL_Init(SDL_INIT_VIDEO);
+
+	m_pWindow = SDL_CreateWindow("NillyGin", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_OPENGL);
+
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+
+	m_GlContext = SDL_GL_CreateContext(m_pWindow);
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	gluOrtho2D(0, 640, 0, 480);
+	glViewport(0, 0, 640, 480);
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
+void Renderer::CleanUp()
+{
+	SDL_GL_DeleteContext(m_GlContext);
+	SDL_DestroyWindow(m_pWindow);
+	SDL_Quit();
+}
+
+void Renderer::Display()
+{
+	SDL_GL_SwapWindow(m_pWindow);
+}
+
+void Renderer::ClearBackground()
+{
+	glClearColor(0.f, 0.f, 0.f, 1.f);
+	glClear(GL_COLOR_BUFFER_BIT);
+}
+
+void Renderer::DrawRectangle(float x, float y, float width, float height,Colour colour)
+{
+	glColor4f(colour.r,colour.g,colour.b,colour.a);
+	glBegin(GL_QUADS);
+
+	glVertex2f(x, y);
+	glVertex2f(x + width, y);
+	glVertex2f(x + width, y + height);
+	glVertex2f(x, y + width);
+
+	glEnd();
+}
