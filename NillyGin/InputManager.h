@@ -15,6 +15,8 @@ enum class InputType
 
 struct Input
 {
+	Input(size_t id, Uint8 key, InputType type);
+
 	size_t id;
 	Uint8 key;
 	InputType type;
@@ -31,7 +33,7 @@ public:
 	bool IsActive(size_t id);
 
 private:
-	std::map<size_t,Uint64> m_InputFlags;
+	std::map<size_t,Uint32> m_InputFlags;
 	std::multimap<Uint8, size_t> m_KeyIndexMap;
 	std::map<size_t,InputType> m_InputTypes;
 };

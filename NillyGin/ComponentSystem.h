@@ -45,12 +45,10 @@ protected:
 	DataBlockSoa<T> m_Components;
 
 private:
-	void MarkGarbage();
 	void CollectGarbage();
 
 private:
-	std::thread m_GarbageMarker;
-	std::vector<size_t> m_CompsToDelete;
+	std::vector<size_t> m_CompsToDelete, m_ValidComps;
 
 	std::map<size_t,size_t> m_EntityComponentLinks; //left = ComponentId, right = EntityId
 };
@@ -79,16 +77,20 @@ void ComponentSystem<T>::Update()
 	if (m_Components.GetSize() > 0)
 	{
 		auto entityManager = EntityManager::GetInstance();
-		m_GarbageMarker = std::thread(&ComponentSystem<T>::MarkGarbage, this);
-
-		size_t entity = 0;
-		for (size_t i = 0; i < m_Components.GetSize(); ++i)
+		for(size_t i = 0; i < m_Components.GetSize();++i)
 		{
-			entity = m_EntityComponentLinks[i];
-			if (entityManager->IsAlive(entity))
+			if(entityManager->IsAlive(m_EntityComponentLinks[i]))
 			{
-				OnUpdate(&m_Components.GetSoa(i), entity);
+				m_ValidComps.push_back(i);
+				continue;
 			}
+
+			m_CompsToDelete.push_back(i);
+		}
+
+		for(size_t i : m_ValidComps)
+		{
+			OnUpdate(&m_Components.GetSoa(i), m_EntityComponentLinks[i]);
 		}
 	}
 }
@@ -100,17 +102,12 @@ void ComponentSystem<T>::LateUpdate()
 	{
 		auto entityManager = EntityManager::GetInstance();
 
-		size_t entity = 0;
-		for (size_t i = 0; i < m_Components.GetSize(); ++i)
+		for (size_t i : m_ValidComps)
 		{
-			entity = m_EntityComponentLinks[i];
-			if (entityManager->IsAlive(entity))
-			{
-				OnLateUpdate(&m_Components.GetSoa(i), entity);
-			}
+			OnLateUpdate(&m_Components.GetSoa(i), m_EntityComponentLinks[i]);
 		}
 
-		m_GarbageMarker.join();
+		m_ValidComps.clear();
 		CollectGarbage();
 	}
 }
@@ -132,30 +129,30 @@ size_t ComponentSystem<T>::GetComponentIndex(size_t entity)
 	return std::find_if(m_EntityComponentLinks.begin(), m_EntityComponentLinks.end(), [entity](const auto& link) {return entity == link.second; })->second;
 }
 
-template <typename T>
-void ComponentSystem<T>::MarkGarbage()
-{
-	size_t aliveInRow = 0;
-	auto entityManager = EntityManager::GetInstance();
-	auto links = m_EntityComponentLinks;
-
-		while (!links.empty() && aliveInRow < 4)
-		{
-			size_t idx = rand() % links.size();
-			auto it = links.begin();
-			std::advance(it, idx);
-
-			if (entityManager->IsAlive((*it).second))
-			{
-				++aliveInRow;
-				continue;
-			}
-
-			aliveInRow = 0;
-			m_CompsToDelete.push_back((*it).first);
-			links.erase(it);
-		}
-}
+//template <typename T>
+//void ComponentSystem<T>::MarkGarbage()
+//{
+//	size_t aliveInRow = 0;
+//	auto entityManager = EntityManager::GetInstance();
+//	auto links = m_EntityComponentLinks;
+//
+//		while (!links.empty() && aliveInRow < 4)
+//		{
+//			size_t idx = rand() % links.size();
+//			auto it = links.begin();
+//			std::advance(it, idx);
+//
+//			if (entityManager->IsAlive((*it).second))
+//			{
+//				++aliveInRow;
+//				continue;
+//			}
+//
+//			aliveInRow = 0;
+//			m_CompsToDelete.push_back((*it).first);
+//			links.erase(it);
+//		}
+//}
 
 template <typename T>
 void ComponentSystem<T>::CollectGarbage()
