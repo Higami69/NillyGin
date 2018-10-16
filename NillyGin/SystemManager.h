@@ -24,7 +24,7 @@ public:
 
 private:
 	ComponentSystemInterface* m_pTransformSystem = nullptr;
-	ComponentSystemInterface* m_pRenderSystem = nullptr;
+	std::vector<ComponentSystemInterface*> m_pRenderSystems;
 	std::vector<ComponentSystemInterface*> m_pSystems;
 	std::vector<std::thread> m_Threads;
 };

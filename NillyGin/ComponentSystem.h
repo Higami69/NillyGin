@@ -11,9 +11,7 @@
 class ComponentSystemInterface
 {
 public:
-	virtual ~ComponentSystemInterface()
-	{
-	}
+	virtual ~ComponentSystemInterface() = default;
 
 	virtual void Update() = 0;
 	virtual void LateUpdate() = 0;

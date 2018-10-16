@@ -28,18 +28,13 @@ void SystemManager::AddTransformSystem(ComponentSystemInterface* system)
 
 void SystemManager::AddRenderSystem(ComponentSystemInterface* system)
 {
-	if(m_pRenderSystem == nullptr)
-	{
-		m_pRenderSystem = system;
-		return;
-	}
-
-	//TODO: Throw/Log Error
+	m_pRenderSystems.push_back(system);
 }
 
 void SystemManager::Update()
 {
 	//Update
+	auto thread = std::thread(&ComponentSystemInterface::Update, m_pTransformSystem);
 	for(size_t i = 0; i < m_pSystems.size();i++)
 	{
 		m_Threads.push_back(std::thread(&ComponentSystemInterface::Update,m_pSystems[i]));
@@ -48,9 +43,11 @@ void SystemManager::Update()
 	{
 		m_Threads[i].join();
 	}
+	thread.join();
 	m_Threads.clear();
 
 	//LateUpdate
+	thread = std::thread(&ComponentSystemInterface::LateUpdate, m_pTransformSystem);
 	for (size_t i = 0; i < m_pSystems.size(); i++)
 	{
 		m_Threads.push_back(std::thread(&ComponentSystemInterface::LateUpdate, m_pSystems[i]));
@@ -59,9 +56,14 @@ void SystemManager::Update()
 	{
 		m_Threads[i].join();
 	}
+	thread.join();
 	m_Threads.clear();
 
 	//Draw
+	for (size_t i =0;i < m_pRenderSystems.size(); i++)
+	{
+		m_pRenderSystems[i]->Update();
+	}
 }
 
 void SystemManager::CleanUp()
@@ -70,12 +72,28 @@ void SystemManager::CleanUp()
 	{
 		m_Threads.push_back(std::thread(&ComponentSystemInterface::CleanUp, m_pSystems[i]));
 	}
-	for(size_t i = 0; i < m_Threads.size(); i++)
+	for(size_t i = 0; i < m_pSystems.size(); i++)
 	{
 		m_Threads[i].join();
+		delete m_pSystems[i];
 	}
 	m_Threads.clear();
 	m_pSystems.clear();
+
+	for(size_t i = 0; i < m_pRenderSystems.size();i++)
+	{
+		m_Threads.push_back(std::thread(&ComponentSystemInterface::CleanUp, m_pRenderSystems[i]));
+	}
+	for(size_t i = 0; i < m_pRenderSystems.size();i++)
+	{
+		m_Threads[i].join();
+		delete m_pRenderSystems[i];
+	}
+	m_Threads.clear();
+	m_pRenderSystems.clear();
+
+	m_pTransformSystem->CleanUp();
+	delete m_pTransformSystem;
 }
 
 TransformComponent::Aos SystemManager::GetTransform(size_t entity)

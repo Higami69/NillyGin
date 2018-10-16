@@ -30,11 +30,13 @@ void InputManager::ResetTriggerInputs()
 
 void InputManager::Update(SDL_KeyboardEvent event)
 {
-	auto range = m_KeyIndexMap.equal_range(event.keysym.sym);
+	auto range = m_KeyIndexMap.equal_range(event.keysym.scancode);
 	auto it = range.first;
 
 	do
 	{
+		if (it == m_KeyIndexMap.end()) return;
+
 		auto type = m_InputTypes[it->second];
 		if(event.type == SDL_KEYDOWN)
 		{
@@ -48,7 +50,7 @@ void InputManager::Update(SDL_KeyboardEvent event)
 		}
 		if (type == InputType::Down)
 			m_InputFlags[it->second / FLAGS_ELEMENT_SIZE] &= FLAGS_FALSE << (it->second % FLAGS_ELEMENT_SIZE);
-	} while (it++ != range.second);
+	} while (++it != range.second);
 }
 
 bool InputManager::IsActive(size_t id)

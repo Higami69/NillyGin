@@ -52,7 +52,7 @@ void Renderer::DrawRectangle(float x, float y, float width, float height,Colour 
 	glVertex2f(x, y);
 	glVertex2f(x + width, y);
 	glVertex2f(x + width, y + height);
-	glVertex2f(x, y + width);
+	glVertex2f(x, y + height);
 
 	glEnd();
 }

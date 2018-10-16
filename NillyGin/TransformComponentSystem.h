@@ -1,17 +1,26 @@
 #pragma once
 #include "ComponentSystem.h"
 #include "TransformComponent.h"
+#include "EventManager.h"
 
-#pragma region EventFlags
-#define MOVE_UP 0x0001u		//To move down pass negative value
-#define MOVE_RIGHT 0x0002u	//To move left pass negative value
-#pragma endregion 
+//Events
+enum class Direction
+{
+	UP, DOWN, LEFT, RIGHT
+};
+struct MoveEvent : public Event
+{
+	MoveEvent(Direction dir, float dist);
 
+	Direction dir;
+	float distance;
+};
 
 class TransformComponentSystem : public ComponentSystem<TransformComponent>
 {
 public:
 	TransformComponentSystem();
+	~TransformComponentSystem() = default;
 
 	void OnUpdate(TransformComponent::Soa* component, size_t entity) override;
 	void OnLateUpdate(TransformComponent::Soa* component, size_t entity) override;

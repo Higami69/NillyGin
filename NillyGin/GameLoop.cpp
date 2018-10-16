@@ -5,6 +5,9 @@
 #include "InputManager.h"
 #include "Tests.h"
 #include "Renderer.h"
+#include "RenderRectComponent.h"
+#include "EventManager.h"
+#include "MovementComponent.h"
 
 
 int wmain(int argc, char *argv[])
@@ -13,11 +16,33 @@ int wmain(int argc, char *argv[])
 	auto entityManager = EntityManager::GetInstance();
 	auto systemManager = SystemManager::GetInstance();
 	auto inputManager = InputManager::GetInstance();
-	Renderer renderer{};
-	renderer.Initialize();
+	auto eventManager = EventManager::GetInstance();
+	auto renderer = Renderer::GetInstance();
+	renderer->Initialize();
 
 	//Construct built in systems (so they're added to the systemManager)
-	TransformComponentSystem{};
+	auto transformSystem = new TransformComponentSystem();
+	auto renderRectSystem = new RenderRectComponentSystem();
+	auto moveSystem = new MovementComponentSystem();
+
+	{
+		auto entity = entityManager->Create();
+		TransformComponent::Aos transform;
+		transform.xPos = 45;
+		transform.yPos = 69;
+		transformSystem->AddComponent(entity, transform);
+		RenderRectComponent::Aos rect;
+		rect.width = 60;
+		rect.height = 30;
+		rect.color_r = 0;
+		rect.color_g = 1;
+		rect.color_b = 1;
+		rect.color_a = 1;
+		renderRectSystem->AddComponent(entity, rect);
+		MovementComponent::Aos move;
+		move.speed = 5.f;
+		moveSystem->AddComponent(entity, move);
+	}
 
 	//Run
 	bool isRunning = true;
@@ -42,18 +67,21 @@ int wmain(int argc, char *argv[])
 
 		systemManager->Update();
 		inputManager->ResetTriggerInputs();
+		eventManager->Clear();
 		
-		renderer.DrawRectangle(0, 0, 50, 50,Colour(1,0,0,1));
-		renderer.Display();
-		renderer.ClearBackground();
+		renderer->Display();
+		renderer->ClearBackground();
 	}
 
 	//CleanUp
-	renderer.CleanUp();
+	renderer->CleanUp();
 	systemManager->CleanUp();
+	eventManager->Clear();
+	Renderer::DeleteInstance();
 	EntityManager::DeleteInstance();
 	InputManager::DeleteInstance();
 	SystemManager::DeleteInstance();
+	EventManager::DeleteInstance();
 
 	return 0;
 }

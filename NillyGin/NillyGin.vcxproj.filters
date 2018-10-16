@@ -16,6 +16,9 @@
     <Filter Include="Default Components">
       <UniqueIdentifier>{93dfe2e8-40a2-413e-af4b-ab68717fb86a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Test Components">
+      <UniqueIdentifier>{7f99c9d3-31d9-4e45-bccd-ddf5a751ecf0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -51,6 +54,15 @@
     <ClInclude Include="Renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="EventManager.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderRectComponent.h">
+      <Filter>Default Components</Filter>
+    </ClInclude>
+    <ClInclude Include="MovementComponent.h">
+      <Filter>Test Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -76,6 +88,15 @@
     </ClCompile>
     <ClCompile Include="Renderer.cpp">
       <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EventManager.cpp">
+      <Filter>ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderRectComponent.cpp">
+      <Filter>Default Components</Filter>
+    </ClCompile>
+    <ClCompile Include="MovementComponent.cpp">
+      <Filter>Test Components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

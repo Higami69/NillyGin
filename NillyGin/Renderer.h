@@ -4,6 +4,7 @@
 #include <SDL_opengl.h>
 #include <GL/GLU.h>
 #include <SDL_image.h>
+#include "Singleton.h"
 
 #pragma comment(lib, "SDL2.lib")
 #pragma comment(lib, "SDL2main.lib")
@@ -21,7 +22,7 @@ struct Colour
 	float r, g, b, a;
 };
 
-class Renderer
+class Renderer : public Singleton<Renderer>
 {
 public:
 	Renderer() = default;
