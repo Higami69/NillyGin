@@ -9,6 +9,7 @@
 #include "EventManager.h"
 #include "MovementComponent.h"
 #include "TimeManager.h"
+#include "TextureComponent.h"
 
 
 int wmain(int argc, char *argv[])
@@ -26,6 +27,7 @@ int wmain(int argc, char *argv[])
 	auto transformSystem = new TransformComponentSystem();
 	auto renderRectSystem = new RenderRectComponentSystem();
 	auto moveSystem = new MovementComponentSystem();
+	auto textureSystem = new TextureComponentSystem();
 
 	{
 		auto entity = entityManager->Create();
@@ -33,14 +35,11 @@ int wmain(int argc, char *argv[])
 		transform.xPos = 45;
 		transform.yPos = 69;
 		transformSystem->AddComponent(entity, transform);
-		RenderRectComponent::Aos rect;
-		rect.width = 60;
-		rect.height = 30;
-		rect.color_r = 0;
-		rect.color_g = 1;
-		rect.color_b = 1;
-		rect.color_a = 1;
-		renderRectSystem->AddComponent(entity, rect);
+		TextureComponent::Aos tex;
+		tex.texture = renderer->LoadTexture("../Textures/bram.png");
+		tex.width = 256.f;
+		tex.height = 256.f;
+		textureSystem->AddComponent(entity, tex);
 		MovementComponent::Aos move;
 		move.speed = 50.f;
 		moveSystem->AddComponent(entity, move);

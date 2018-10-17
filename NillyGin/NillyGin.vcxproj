@@ -163,6 +163,7 @@
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="SystemManager.h" />
     <ClInclude Include="Tests.h" />
+    <ClInclude Include="TextureComponent.h" />
     <ClInclude Include="TimeManager.h" />
     <ClInclude Include="TransformComponent.h" />
     <ClInclude Include="TransformComponentSystem.h" />
@@ -183,6 +184,7 @@
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RenderRectComponent.cpp" />
     <ClCompile Include="SystemManager.cpp" />
+    <ClCompile Include="TextureComponent.cpp" />
     <ClCompile Include="TimeManager.cpp" />
     <ClCompile Include="TransformComponentSystem.cpp" />
   </ItemGroup>

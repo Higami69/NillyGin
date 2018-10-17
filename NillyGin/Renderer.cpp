@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Renderer.h"
+#include <iostream>
 
 #define DEGREES_TO_RADIANS (M_PI / 180.f)
 
@@ -26,10 +27,13 @@ void Renderer::Initialize()
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG);
 }
 
 void Renderer::CleanUp()
 {
+	IMG_Quit();
 	SDL_GL_DeleteContext(m_GlContext);
 	SDL_DestroyWindow(m_pWindow);
 	SDL_Quit();
@@ -111,4 +115,71 @@ void Renderer::DrawPoint(Float2 point, Colour colour, float pointSize)
 
 	glEnd();
 
+}
+
+void Renderer::DrawTexture(GLuint texture, Float2 botLeft, float width, float height)
+{
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+
+	glEnable(GL_TEXTURE_2D);
+	{
+		glBegin(GL_QUADS);
+
+		glTexCoord2f(0, 0);
+		glVertex2f(botLeft.x, botLeft.y + height);
+
+		glTexCoord2f(1, 0);
+		glVertex2f(botLeft.x + width, botLeft.y + height);
+
+		glTexCoord2f(1, 1);
+		glVertex2f(botLeft.x + width, botLeft.y);
+
+		glTexCoord2f(0, 1);
+		glVertex2f(botLeft.x, botLeft.y);
+	
+		glEnd();
+	}
+	glDisable(GL_TEXTURE_2D);
+}
+
+GLuint Renderer::LoadTexture(const std::string& path, GLint scaleMode)
+{
+	GLuint texture;
+	auto surface = IMG_Load(path.c_str());
+
+	//Generate and bind texture
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	//Check pixel format
+	switch(surface->format->BytesPerPixel)
+	{
+	case 1:
+		//TODO: Implement later
+		break;
+	case 2:
+		//TODO:Implement later
+		break;
+	case 3:
+		//TODO: Implement later
+		break;
+	case 4:
+		if(surface->format->Rmask == 0x000000ff) //RGBA
+		{
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, surface->pixels);
+		}
+		else //BGRA
+		{
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0, GL_BGRA, GL_UNSIGNED_BYTE, surface->pixels);
+		}
+		break;
+	}
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, scaleMode);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, scaleMode);
+
+	auto e = SDL_GetError();
+
+	return texture;
 }
