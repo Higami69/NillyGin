@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Renderer.h"
 
+#define DEGREES_TO_RADIANS (M_PI / 180.f)
+
 void Renderer::Initialize()
 {
 	SDL_Init(SDL_INIT_VIDEO);
@@ -44,10 +46,12 @@ void Renderer::ClearBackground()
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void Renderer::DrawRectangle(float x, float y, float width, float height,Colour colour)
+void Renderer::DrawRectangle(float x, float y, float width, float height,Colour colour, bool filled)
 {
 	glColor4f(colour.r,colour.g,colour.b,colour.a);
-	glBegin(GL_QUADS);
+
+	if (filled) glBegin(GL_QUADS);
+	else glBegin(GL_LINE_LOOP);
 
 	glVertex2f(x, y);
 	glVertex2f(x + width, y);
@@ -55,4 +59,56 @@ void Renderer::DrawRectangle(float x, float y, float width, float height,Colour 
 	glVertex2f(x, y + height);
 
 	glEnd();
+}
+
+void Renderer::DrawTriangle(Float2 p1, Float2 p2, Float2 p3, Colour colour, bool filled)
+{
+	glColor4f(colour.r, colour.g, colour.b, colour.a);
+
+	if (filled) glBegin(GL_TRIANGLES);
+	else glBegin(GL_LINE_LOOP);
+
+	glVertex2f(p1.x, p1.y);
+	glVertex2f(p2.x, p2.y);
+	glVertex2f(p3.x, p3.y);
+
+	glEnd();
+}
+
+void Renderer::DrawEllipse(Float2 center, float width, float height, Colour colour, float interpolation, bool filled)
+{
+	glColor4f(colour.r, colour.g, colour.b, colour.a);
+
+	if (filled) glBegin(GL_POLYGON);
+	else glBegin(GL_LINE_LOOP);
+
+	for (int i = 0; i < 360; i += interpolation) glVertex2f(center.x + width*cosf(i * DEGREES_TO_RADIANS), center.y + height*sinf(i * DEGREES_TO_RADIANS));
+
+	glEnd();
+}
+
+void Renderer::DrawLine(Float2 p1, Float2 p2, Colour colour, float lineWidth)
+{
+	glColor4f(colour.r, colour.g, colour.b, colour.a);
+	glLineWidth(lineWidth);
+
+	glBegin(GL_LINE);
+
+	glVertex2f(p1.x, p1.y);
+	glVertex2f(p2.x, p2.y);
+
+	glEnd();
+}
+
+void Renderer::DrawPoint(Float2 point, Colour colour, float pointSize)
+{
+	glColor4f(colour.r, colour.g, colour.b, colour.a);
+	glPointSize(pointSize);
+
+	glBegin(GL_POINT);
+
+	glVertex2f(point.x, point.y);
+
+	glEnd();
+
 }
