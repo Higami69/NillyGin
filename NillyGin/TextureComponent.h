@@ -29,6 +29,7 @@ public:
 	void OnUpdate(TextureComponent::Soa* component, size_t entity) override;
 	void OnLateUpdate(TextureComponent::Soa* component, size_t entity) override;
 	void OnCleanUp(TextureComponent::Soa* component) override;
+	void OnDraw(const TextureComponent::Aos& component, TransformComponent::Aos transform) override;
 
 private:
 };

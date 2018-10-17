@@ -61,6 +61,10 @@ void TransformComponentSystem::OnCleanUp(TransformComponent::Soa* component)
 {
 }
 
+void TransformComponentSystem::OnDraw(const TransformComponent::Aos& component, TransformComponent::Aos transform)
+{
+}
+
 TransformComponent::Aos TransformComponentSystem::GetTransform(size_t entity)
 {
 	return m_Components.GetAos(GetComponentIndex(entity));

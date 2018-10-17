@@ -25,6 +25,7 @@ public:
 	void OnUpdate(MovementComponent::Soa* component, size_t entity) override;
 	void OnLateUpdate(MovementComponent::Soa* component, size_t entity) override;
 	void OnCleanUp(MovementComponent::Soa* component) override;
+	void OnDraw(const MovementComponent::Aos& component, TransformComponent::Aos transform) override;
 
 private:
 };

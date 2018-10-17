@@ -16,6 +16,7 @@ public:
 	virtual void Update() = 0;
 	virtual void LateUpdate() = 0;
 	virtual void CleanUp() = 0;
+	virtual void Draw() = 0;
 
 	virtual size_t GetComponentIndex(size_t entity) = 0;
 };
@@ -32,12 +33,14 @@ public:
 	void Update() override;
 	void LateUpdate() override;
 	void CleanUp() override;
+	void Draw() override;
 
 	size_t GetComponentIndex(size_t entity) override;
 
 	virtual void OnUpdate(typename T::Soa* component, size_t entity) = 0;
 	virtual void OnLateUpdate(typename T::Soa* component, size_t entity) = 0;
 	virtual void OnCleanUp(typename T::Soa* component) = 0;
+	virtual void OnDraw(const typename T::Aos& component, TransformComponent::Aos transform) = 0;
 
 protected:
 	DataBlockSoa<T> m_Components;
@@ -122,35 +125,39 @@ void ComponentSystem<T>::CleanUp()
 }
 
 template <typename T>
+void ComponentSystem<T>::Draw()
+{
+	if (m_Components.GetSize() > 0)
+	{
+		auto entityManager = EntityManager::GetInstance();
+		auto systemManager = SystemManager::GetInstance();
+
+		for (size_t i = 0; i < m_Components.GetSize(); ++i)
+		{
+			if (entityManager->IsAlive(m_EntityComponentLinks[i]))
+			{
+				m_ValidComps.push_back(i);
+				continue;
+			}
+
+			m_CompsToDelete.push_back(i);
+		}
+
+		for (size_t i : m_ValidComps)
+		{
+			OnDraw(m_Components.GetAos(i), systemManager->GetTransform(m_EntityComponentLinks[i]));
+		}
+
+		m_ValidComps.clear();
+		CollectGarbage();
+	}
+}
+
+template <typename T>
 size_t ComponentSystem<T>::GetComponentIndex(size_t entity)
 {
 	return std::find_if(m_EntityComponentLinks.begin(), m_EntityComponentLinks.end(), [entity](const auto& link) {return entity == link.second; })->second;
 }
-
-//template <typename T>
-//void ComponentSystem<T>::MarkGarbage()
-//{
-//	size_t aliveInRow = 0;
-//	auto entityManager = EntityManager::GetInstance();
-//	auto links = m_EntityComponentLinks;
-//
-//		while (!links.empty() && aliveInRow < 4)
-//		{
-//			size_t idx = rand() % links.size();
-//			auto it = links.begin();
-//			std::advance(it, idx);
-//
-//			if (entityManager->IsAlive((*it).second))
-//			{
-//				++aliveInRow;
-//				continue;
-//			}
-//
-//			aliveInRow = 0;
-//			m_CompsToDelete.push_back((*it).first);
-//			links.erase(it);
-//		}
-//}
 
 template <typename T>
 void ComponentSystem<T>::CollectGarbage()

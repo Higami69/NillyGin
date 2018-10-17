@@ -32,4 +32,5 @@ public:
 	void OnUpdate(RenderRectComponent::Soa* component, size_t entity) override;
 	void OnLateUpdate(RenderRectComponent::Soa* component, size_t entity) override;
 	void OnCleanUp(RenderRectComponent::Soa* component) override;
+	void OnDraw(const RenderRectComponent::Aos& component, TransformComponent::Aos transform) override;
 };

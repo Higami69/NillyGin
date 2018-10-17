@@ -25,6 +25,7 @@ public:
 	void OnUpdate(TransformComponent::Soa* component, size_t entity) override;
 	void OnLateUpdate(TransformComponent::Soa* component, size_t entity) override;
 	void OnCleanUp(TransformComponent::Soa* component) override;
+	void OnDraw(const TransformComponent::Aos& component, TransformComponent::Aos transform) override;
 
 	TransformComponent::Aos GetTransform(size_t entity);
 private:

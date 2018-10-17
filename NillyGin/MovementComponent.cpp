@@ -49,3 +49,7 @@ void MovementComponentSystem::OnLateUpdate(MovementComponent::Soa* component, si
 void MovementComponentSystem::OnCleanUp(MovementComponent::Soa* component)
 {
 }
+
+void MovementComponentSystem::OnDraw(const MovementComponent::Aos& component, TransformComponent::Aos transform)
+{
+}

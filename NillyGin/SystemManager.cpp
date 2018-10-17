@@ -62,7 +62,7 @@ void SystemManager::Update()
 	//Draw
 	for (size_t i =0;i < m_pRenderSystems.size(); i++)
 	{
-		m_pRenderSystems[i]->Update();
+		m_pRenderSystems[i]->Draw();
 	}
 }
 
