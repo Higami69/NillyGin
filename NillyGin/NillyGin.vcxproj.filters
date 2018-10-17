@@ -63,6 +63,9 @@
     <ClInclude Include="MovementComponent.h">
       <Filter>Test Components</Filter>
     </ClInclude>
+    <ClInclude Include="TimeManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -97,6 +100,9 @@
     </ClCompile>
     <ClCompile Include="MovementComponent.cpp">
       <Filter>Test Components</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeManager.cpp">
+      <Filter>Header Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

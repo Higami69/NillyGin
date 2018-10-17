@@ -2,8 +2,9 @@
 #include "InputManager.h"
 
 #define FLAGS_ELEMENT_SIZE 32u
-#define FLAGS_TRUE 1ll
-#define FLAGS_FALSE 0ll
+#define FLAGS_ALL_BITS_SET 255u
+#define FLAGS_TRUE 1u
+#define FLAGS_FALSE 0u
 
 Input::Input(size_t id, Uint8 key, InputType type)
 	:id(id), key(key), type(type)
@@ -49,7 +50,7 @@ void InputManager::Update(SDL_KeyboardEvent event)
 			continue;
 		}
 		if (type == InputType::Down)
-			m_InputFlags[it->second / FLAGS_ELEMENT_SIZE] &= FLAGS_FALSE << (it->second % FLAGS_ELEMENT_SIZE);
+			m_InputFlags[it->second / FLAGS_ELEMENT_SIZE] &= FLAGS_ALL_BITS_SET - (FLAGS_TRUE << (it->second % FLAGS_ELEMENT_SIZE));
 	} while (++it != range.second);
 }
 

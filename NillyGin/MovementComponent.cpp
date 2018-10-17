@@ -3,6 +3,7 @@
 #include "InputManager.h"
 #include "EventManager.h"
 #include "TransformComponentSystem.h"
+#include "TimeManager.h"
 
 MovementComponentSystem::MovementComponentSystem()
 {
@@ -21,19 +22,23 @@ void MovementComponentSystem::OnUpdate(MovementComponent::Soa* component, size_t
 
 	if(input->IsActive(0))
 	{
-		eventManager->AddEvent("Transform", entity, new MoveEvent(Direction::LEFT, 1.f));
+		auto deltaTime = TimeManager::GetInstance()->GetDeltaTime();
+		eventManager->AddEvent("Transform", entity, new MoveEvent(Direction::LEFT,*component->speed * deltaTime ));
 	}
 	if (input->IsActive(1))
 	{
-		eventManager->AddEvent("Transform", entity, new MoveEvent(Direction::RIGHT, 1.f));
+		auto deltaTime = TimeManager::GetInstance()->GetDeltaTime();
+		eventManager->AddEvent("Transform", entity, new MoveEvent(Direction::RIGHT, *component->speed * deltaTime));
 	}
 	if (input->IsActive(2))
 	{
-		eventManager->AddEvent("Transform", entity, new MoveEvent(Direction::UP, 1.f));
+		auto deltaTime = TimeManager::GetInstance()->GetDeltaTime();
+		eventManager->AddEvent("Transform", entity, new MoveEvent(Direction::UP, *component->speed * deltaTime));
 	}
 	if (input->IsActive(3))
 	{
-		eventManager->AddEvent("Transform", entity, new MoveEvent(Direction::DOWN, 1.f));
+		auto deltaTime = TimeManager::GetInstance()->GetDeltaTime();
+		eventManager->AddEvent("Transform", entity, new MoveEvent(Direction::DOWN, *component->speed * deltaTime));
 	}
 }
 

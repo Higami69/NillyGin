@@ -8,6 +8,7 @@
 #include "RenderRectComponent.h"
 #include "EventManager.h"
 #include "MovementComponent.h"
+#include "TimeManager.h"
 
 
 int wmain(int argc, char *argv[])
@@ -18,6 +19,7 @@ int wmain(int argc, char *argv[])
 	auto inputManager = InputManager::GetInstance();
 	auto eventManager = EventManager::GetInstance();
 	auto renderer = Renderer::GetInstance();
+	auto timeManager = TimeManager::GetInstance();
 	renderer->Initialize();
 
 	//Construct built in systems (so they're added to the systemManager)
@@ -40,7 +42,7 @@ int wmain(int argc, char *argv[])
 		rect.color_a = 1;
 		renderRectSystem->AddComponent(entity, rect);
 		MovementComponent::Aos move;
-		move.speed = 5.f;
+		move.speed = 50.f;
 		moveSystem->AddComponent(entity, move);
 	}
 
@@ -65,6 +67,7 @@ int wmain(int argc, char *argv[])
 			}
 		}
 
+		timeManager->Update();
 		systemManager->Update();
 		inputManager->ResetTriggerInputs();
 		eventManager->Clear();
@@ -78,6 +81,7 @@ int wmain(int argc, char *argv[])
 	systemManager->CleanUp();
 	eventManager->Clear();
 	Renderer::DeleteInstance();
+	TimeManager::DeleteInstance();
 	EntityManager::DeleteInstance();
 	InputManager::DeleteInstance();
 	SystemManager::DeleteInstance();
