@@ -17,8 +17,8 @@ int wmain(int argc, char *argv[])
 	//Initialize
 	srand((unsigned int)time(nullptr));
 
-	auto entityManager = EntityManager::GetInstance();
-	auto systemManager = SystemManager::GetInstance();
+	auto entityManager = EntityManager{};
+	auto systemManager = SystemManager{};
 	auto inputManager = InputManager::GetInstance();
 	auto eventManager = EventManager::GetInstance();
 	auto renderer = Renderer::GetInstance();
@@ -27,13 +27,17 @@ int wmain(int argc, char *argv[])
 
 	//Construct built in systems (so they're added to the systemManager)
 	auto transformSystem = new TransformComponentSystem();
+	transformSystem->Initialize(&entityManager,&systemManager,TRANSFORM_SYSTEM);
 	auto renderRectSystem = new RenderRectComponentSystem();
+	renderRectSystem->Initialize(&entityManager,&systemManager,RENDER_SYSTEM);
 	auto moveSystem = new MovementComponentSystem();
+	moveSystem->Initialize(&entityManager,&systemManager);
 	auto textureSystem = new TextureComponentSystem();
+	textureSystem->Initialize(&entityManager,&systemManager,RENDER_SYSTEM);
 
 	for(int i = 0; i < 1000; i++)
 	{
-		auto entity = entityManager->Create();
+		auto entity = entityManager.Create();
 		TransformComponent::Aos transform;
 		transform.xPos = (float) (rand() % 600);
 		transform.yPos = (float)(rand() % 500);
@@ -84,7 +88,7 @@ int wmain(int argc, char *argv[])
 		}
 
 		timeManager->Update();
-		systemManager->Update();
+		systemManager.Update();
 		inputManager->ResetTriggerInputs();
 		eventManager->Clear();
 		
@@ -94,13 +98,11 @@ int wmain(int argc, char *argv[])
 
 	//CleanUp
 	renderer->CleanUp();
-	systemManager->CleanUp();
+	systemManager.CleanUp();
 	eventManager->Clear();
 	Renderer::DeleteInstance();
 	TimeManager::DeleteInstance();
-	EntityManager::DeleteInstance();
 	InputManager::DeleteInstance();
-	SystemManager::DeleteInstance();
 	EventManager::DeleteInstance();
 
 	return 0;

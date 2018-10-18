@@ -4,10 +4,6 @@
 
 TextureComponentSystem::TextureComponentSystem()
 {
-	ComponentSystemInterface* _This = this;
-	auto systemManager = SystemManager::GetInstance();
-	systemManager->RemoveSystem(_This);
-	systemManager->AddRenderSystem(_This);
 }
 
 void TextureComponentSystem::OnUpdate(TextureComponent::Soa* component, size_t entity)

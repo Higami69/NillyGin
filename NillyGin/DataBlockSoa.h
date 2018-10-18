@@ -13,6 +13,7 @@
 	template<> \
 	static GetPointerToMemberTypeSoa<classType,idx>::Type GetPointerToMemberSoa<classType,idx>(void)\
 	{return &classType::Soa::member;}
+
 #pragma endregion 
 
 #pragma region declarations

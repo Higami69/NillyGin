@@ -14,7 +14,7 @@
 
 #define MINIMUM_FREE_INDICES 1024u
 
-class EntityManager : public Singleton<EntityManager>
+class EntityManager
 {
 public:
 	EntityManager() = default;

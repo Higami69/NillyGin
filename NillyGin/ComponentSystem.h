@@ -8,6 +8,9 @@
 #include "EntityManager.h"
 #include <algorithm>
 
+#define RENDER_SYSTEM 0x0001u
+#define TRANSFORM_SYSTEM 0x0002u
+
 class ComponentSystemInterface
 {
 public:
@@ -27,6 +30,8 @@ class ComponentSystem : public ComponentSystemInterface
 public:
 	ComponentSystem();
 	virtual ~ComponentSystem();
+
+	void Initialize(EntityManager* entityManager,SystemManager* systemManager, size_t flags = 0u);
 
 	void AddComponent(size_t entity, const typename T::Aos& component);
 
@@ -50,19 +55,42 @@ private:
 
 private:
 	std::vector<size_t> m_CompsToDelete, m_ValidComps;
-
 	std::map<size_t,size_t> m_EntityComponentLinks; //left = ComponentId, right = EntityId
+
+	EntityManager* m_pEntityManager;
+	SystemManager* m_pSystemManager;
 };
 
 template <typename T>
 ComponentSystem<T>::ComponentSystem()
+	:m_pSystemManager(nullptr)
+	,m_pEntityManager(nullptr)
 {
-	SystemManager::GetInstance()->AddSystem(this);
 }
 
 template <typename T>
 ComponentSystem<T>::~ComponentSystem()
 {
+}
+
+template <typename T>
+void ComponentSystem<T>::Initialize(EntityManager* entityManager, SystemManager* systemManager,size_t flags)
+{
+	m_pEntityManager = entityManager;
+	m_pSystemManager = systemManager;
+	
+	switch(flags)
+	{
+	case 0u:
+		m_pSystemManager->AddSystem(this);
+		break;
+	case RENDER_SYSTEM:
+		m_pSystemManager->AddRenderSystem(this);
+		break;
+	case TRANSFORM_SYSTEM:
+		m_pSystemManager->AddTransformSystem(this);
+		break;
+	}
 }
 
 template <typename T>
@@ -77,10 +105,9 @@ void ComponentSystem<T>::Update()
 {
 	if (m_Components.GetSize() > 0)
 	{
-		auto entityManager = EntityManager::GetInstance();
 		for(size_t i = 0; i < m_Components.GetSize();++i)
 		{
-			if(entityManager->IsAlive(m_EntityComponentLinks[i]))
+			if(m_pEntityManager->IsAlive(m_EntityComponentLinks[i]))
 			{
 				m_ValidComps.push_back(i);
 				continue;
@@ -101,8 +128,6 @@ void ComponentSystem<T>::LateUpdate()
 {
 	if (m_Components.GetSize() > 0)
 	{
-		auto entityManager = EntityManager::GetInstance();
-
 		for (size_t i : m_ValidComps)
 		{
 			OnLateUpdate(&m_Components.GetSoa(i), m_EntityComponentLinks[i]);
@@ -116,8 +141,6 @@ void ComponentSystem<T>::LateUpdate()
 template <typename T>
 void ComponentSystem<T>::CleanUp()
 {
-	auto entityManager = EntityManager::GetInstance();
-
 	for (size_t i = 0; i < m_Components.GetSize(); ++i)
 	{
 		OnCleanUp(&m_Components.GetSoa(i));
@@ -129,12 +152,9 @@ void ComponentSystem<T>::Draw()
 {
 	if (m_Components.GetSize() > 0)
 	{
-		auto entityManager = EntityManager::GetInstance();
-		auto systemManager = SystemManager::GetInstance();
-
 		for (size_t i = 0; i < m_Components.GetSize(); ++i)
 		{
-			if (entityManager->IsAlive(m_EntityComponentLinks[i]))
+			if (m_pEntityManager->IsAlive(m_EntityComponentLinks[i]))
 			{
 				m_ValidComps.push_back(i);
 				continue;
@@ -145,7 +165,7 @@ void ComponentSystem<T>::Draw()
 
 		for (size_t i : m_ValidComps)
 		{
-			OnDraw(m_Components.GetAos(i), systemManager->GetTransform(m_EntityComponentLinks[i]));
+			OnDraw(m_Components.GetAos(i), m_pSystemManager->GetTransform(m_EntityComponentLinks[i]));
 		}
 
 		m_ValidComps.clear();

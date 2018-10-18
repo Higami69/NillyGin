@@ -1,5 +1,4 @@
 #pragma once
-#include "Singleton.h"
 #include <vector>
 #include <thread>
 #include "TransformComponent.h"
@@ -7,7 +6,7 @@
 
 class ComponentSystemInterface;
 
-class SystemManager : public Singleton<SystemManager>
+class SystemManager
 {
 public:
 	SystemManager() = default;

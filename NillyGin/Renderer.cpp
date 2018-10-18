@@ -2,7 +2,7 @@
 #include "Renderer.h"
 #include <iostream>
 
-#define DEGREES_TO_RADIANS (M_PI / 180.f)
+#define DEGREES_TO_RADIANS float(M_PI / 180.f)
 
 void Renderer::Initialize()
 {
@@ -86,7 +86,7 @@ void Renderer::DrawEllipse(Float2 center, float width, float height, Colour colo
 	if (filled) glBegin(GL_POLYGON);
 	else glBegin(GL_LINE_LOOP);
 
-	for (int i = 0; i < 360; i += interpolation) glVertex2f(center.x + width*cosf(i * DEGREES_TO_RADIANS), center.y + height*sinf(i * DEGREES_TO_RADIANS));
+	for (int i = 0; i < 360; i += (int)interpolation) glVertex2f(center.x + width*cosf(i * DEGREES_TO_RADIANS), center.y + height*sinf(i * DEGREES_TO_RADIANS));
 
 	glEnd();
 }

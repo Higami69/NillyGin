@@ -19,6 +19,9 @@
     <Filter Include="Test Components">
       <UniqueIdentifier>{7f99c9d3-31d9-4e45-bccd-ddf5a751ecf0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Rendering">
+      <UniqueIdentifier>{97a7aa11-48cd-45f9-9e72-feb1c9017506}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -51,9 +54,6 @@
     <ClInclude Include="Tests.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="EventManager.h">
       <Filter>ECS</Filter>
     </ClInclude>
@@ -69,12 +69,12 @@
     <ClInclude Include="TextureComponent.h">
       <Filter>Default Components</Filter>
     </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="EntityManager.cpp">
@@ -92,9 +92,6 @@
     <ClCompile Include="InputManager.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
     <ClCompile Include="EventManager.cpp">
       <Filter>ECS</Filter>
     </ClCompile>
@@ -109,6 +106,9 @@
     </ClCompile>
     <ClCompile Include="TextureComponent.cpp">
       <Filter>Default Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Rendering</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -8,11 +8,6 @@ MoveEvent::MoveEvent(Direction dir, float dist)
 
 TransformComponentSystem::TransformComponentSystem()
 {
-	auto systemManager = SystemManager::GetInstance();
-	ComponentSystemInterface* _this = this;
-	systemManager->RemoveSystem(_this);
-	systemManager->AddTransformSystem(_this);
-
 	EventManager::GetInstance()->AddQueue("Transform");
 }
 

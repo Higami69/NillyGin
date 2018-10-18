@@ -173,7 +173,6 @@
     <ClCompile Include="EventManager.cpp" />
     <ClCompile Include="GameLoop.cpp" />
     <ClCompile Include="InputManager.cpp" />
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="MovementComponent.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

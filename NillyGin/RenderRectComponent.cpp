@@ -3,10 +3,6 @@
 
 RenderRectComponentSystem::RenderRectComponentSystem()
 {
-	auto systemManager = SystemManager::GetInstance();
-	ComponentSystemInterface* _this = this;
-	systemManager->RemoveSystem(_this);
-	systemManager->AddRenderSystem(_this);
 }
 
 RenderRectComponentSystem::~RenderRectComponentSystem()
