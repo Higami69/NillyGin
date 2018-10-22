@@ -20,6 +20,8 @@ struct Colour
 	{
 	}
 
+	Colour() = default;
+
 	float r, g, b, a;
 };
 
@@ -29,6 +31,8 @@ struct Float2
 		:x(x), y(y)
 	{
 	}
+
+	Float2() = default;
 
 	float x, y;
 };

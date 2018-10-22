@@ -9,10 +9,20 @@
 	struct GetType<classType,idx> {typedef memberType Type;}; \
 	template<> \
 	static GetPointerToMemberTypeAos<classType,idx>::Type GetPointerToMemberAos<classType,idx>(void) \
-	{return &classType::Aos::member;} \
+	{return &classType::Aos::member;}; \
 	template<> \
 	static GetPointerToMemberTypeSoa<classType,idx>::Type GetPointerToMemberSoa<classType,idx>(void)\
-	{return &classType::Soa::member;}
+	{return &classType::Soa::member;};
+
+#define DEFINE_SOA_TYPE_STRUCT(classType, idx, structType, memberType, structName, member) \
+	template<> \
+	struct GetType<classType,idx> {typedef structType::*memberType Type;}; \
+	template<> \
+	static GetPointerToMemberTypeAos<classType,idx>::Type GetPointerToMemberAos<classType,idx>(void) \
+	{return &classType::Aos::*structName.*structType::member;} \
+	template<> \
+	static GetPointerToMemberTypeSoa<classType,idx>::Type GetPointerToMemberSoa<classType,idx>(void) \
+	{return &classType::Soa::*structName.*structType::member;}
 
 #pragma endregion 
 
@@ -80,6 +90,7 @@ private:
 
 #pragma region Templates
 #include <cstdlib>
+
 template <typename T, size_t N>
 struct GetType;
 

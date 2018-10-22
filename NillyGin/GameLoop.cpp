@@ -10,6 +10,7 @@
 #include "MovementComponent.h"
 #include "TimeManager.h"
 #include "TextureComponent.h"
+#include "RenderBackEnd.h"
 
 
 int wmain(int argc, char *argv[])
@@ -21,9 +22,12 @@ int wmain(int argc, char *argv[])
 	auto systemManager = SystemManager{};
 	auto inputManager = InputManager::GetInstance();
 	auto eventManager = EventManager::GetInstance();
-	auto renderer = Renderer::GetInstance();
+	//auto renderer = Renderer::GetInstance();
 	auto timeManager = TimeManager::GetInstance();
-	renderer->Initialize();
+	//renderer->Initialize();
+
+	RenderBackEnd backEnd{};
+	backEnd.Initialize();
 
 	//Construct built in systems (so they're added to the systemManager)
 	auto transformSystem = new TransformComponentSystem();
@@ -58,11 +62,11 @@ int wmain(int argc, char *argv[])
 			MovementComponent::Aos move;
 			move.speed = 500.f;
 			moveSystem->AddComponent(entity, move);
-			TextureComponent::Aos tex;
-			tex.texture = renderer->LoadTexture("../Textures/GhostBram.png");
-			tex.width = 128.f;
-			tex.height = 128.f;
-			textureSystem->AddComponent(entity, tex);
+			//TextureComponent::Aos tex;
+			//tex.texture = renderer->LoadTexture("../Textures/GhostBram.png");
+			//tex.width = 128.f;
+			//tex.height = 128.f;
+			//textureSystem->AddComponent(entity, tex);
 		}
 	}
 
@@ -92,12 +96,15 @@ int wmain(int argc, char *argv[])
 		inputManager->ResetTriggerInputs();
 		eventManager->Clear();
 		
-		renderer->Display();
-		renderer->ClearBackground();
+		backEnd.Update();
+
+		//renderer->Display();
+		//renderer->ClearBackground();
 	}
 
 	//CleanUp
-	renderer->CleanUp();
+	//renderer->CleanUp();
+	backEnd.CleanUp();
 	systemManager.CleanUp();
 	eventManager->Clear();
 	Renderer::DeleteInstance();

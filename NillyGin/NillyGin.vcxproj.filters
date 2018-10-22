@@ -72,6 +72,15 @@
     <ClInclude Include="Renderer.h">
       <Filter>Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="RenderBackEnd.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderQueue.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="POD.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -109,6 +118,15 @@
     </ClCompile>
     <ClCompile Include="Renderer.cpp">
       <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderBackEnd.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderQueue.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="POD.cpp">
+      <Filter>Header Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
