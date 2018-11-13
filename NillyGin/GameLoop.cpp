@@ -5,12 +5,19 @@
 #include "InputManager.h"
 #include "Tests.h"
 #include "Renderer.h"
-#include "RenderRectComponent.h"
 #include "EventManager.h"
 #include "MovementComponent.h"
 #include "TimeManager.h"
 #include "TextureComponent.h"
+#include "RenderQueue.h"
 #include "RenderBackEnd.h"
+#include "RenderPointComponent.h"
+#include "RenderLineComponent.h"
+#include "RenderTriangleComponent.h"
+#include "RenderRectangleComponent.h"
+#include "RenderEllipseComponent.h"
+#include "RenderTextureComponent.h"
+#include "TextureLibrary.h"
 
 
 int wmain(int argc, char *argv[])
@@ -22,51 +29,73 @@ int wmain(int argc, char *argv[])
 	auto systemManager = SystemManager{};
 	auto inputManager = InputManager::GetInstance();
 	auto eventManager = EventManager::GetInstance();
-	//auto renderer = Renderer::GetInstance();
 	auto timeManager = TimeManager::GetInstance();
-	//renderer->Initialize();
 
-	RenderBackEnd backEnd{};
-	backEnd.Initialize();
+	RenderBackEnd renderBackEnd{};
+	renderBackEnd.Initialize();
+	RenderQueue renderQueue{};
+	renderQueue.Initialize(&renderBackEnd);
 
 	//Construct built in systems (so they're added to the systemManager)
+#pragma region Built-In Systems
 	auto transformSystem = new TransformComponentSystem();
 	transformSystem->Initialize(&entityManager,&systemManager,TRANSFORM_SYSTEM);
-	auto renderRectSystem = new RenderRectComponentSystem();
-	renderRectSystem->Initialize(&entityManager,&systemManager,RENDER_SYSTEM);
 	auto moveSystem = new MovementComponentSystem();
 	moveSystem->Initialize(&entityManager,&systemManager);
-	auto textureSystem = new TextureComponentSystem();
-	textureSystem->Initialize(&entityManager,&systemManager,RENDER_SYSTEM);
+	auto renderPointSystem = new RenderPointComponentSystem();
+	renderPointSystem->Initialize(&entityManager, &systemManager, RENDER_SYSTEM);
+	renderPointSystem->SetRenderQueue(&renderQueue);
+	auto renderLineSystem = new RenderLineComponentSystem();
+	renderLineSystem->Initialize(&entityManager, &systemManager, RENDER_SYSTEM);
+	renderLineSystem->SetRenderQueue(&renderQueue);
+	auto renderTriangleSystem = new RenderTriangleComponentSystem();
+	renderTriangleSystem->Initialize(&entityManager, &systemManager, RENDER_SYSTEM);
+	renderTriangleSystem->SetRenderQueue(&renderQueue);
+	auto renderRectangleSystem = new RenderRectangleComponentSystem();
+	renderRectangleSystem->Initialize(&entityManager, &systemManager, RENDER_SYSTEM);
+	renderRectangleSystem->SetRenderQueue(&renderQueue);
+	auto renderEllipseSystem = new RenderEllipseComponentSystem();
+	renderEllipseSystem->Initialize(&entityManager, &systemManager, RENDER_SYSTEM);
+	renderEllipseSystem->SetRenderQueue(&renderQueue);
+	auto renderTextureSystem = new RenderTextureComponentSystem();
+	renderTextureSystem->Initialize(&entityManager, &systemManager, RENDER_SYSTEM);
+	renderTextureSystem->SetRenderQueue(&renderQueue);
+#pragma endregion
+
+	SDL_GL_MakeCurrent(renderBackEnd.GetWindow(), renderBackEnd.GetContext());
+
+	TextureLibrary texLib{};
+	auto bram = texLib.LoadTexture("../Textures/GhostBram.png",GL_NEAREST);
+	auto dorito = texLib.LoadTexture("../Textures/Dorito.png", GL_NEAREST);
+
+	SDL_GL_MakeCurrent(0, 0);
 
 	for(int i = 0; i < 1000; i++)
 	{
 		auto entity = entityManager.Create();
 		TransformComponent::Aos transform;
-		transform.xPos = (float) (rand() % 600);
-		transform.yPos = (float)(rand() % 500);
-		transformSystem->AddComponent(entity, transform);
-		if (i > 0)
+		transform.pos.x = float(rand() % 600);
+		transform.pos.y = float(rand() % 500);
+
+		if(i > 499)
 		{
-			RenderRectComponent::Aos rect;
-			rect.width = (float) (rand() % 250) + 20;
-			rect.height = (float)(rand() % 150) + 20;
-			rect.color_a = 1.f;
-			rect.color_b = (float)(rand() % 255) / 255.f;
-			rect.color_g = (float)(rand() % 255) / 255.f;
-			rect.color_r = (float)(rand() % 255) / 255.f;
-			renderRectSystem->AddComponent(entity, rect);
+			transform.pos.z = 0;
+			transformSystem->AddComponent(entity, transform);
+			RenderTextureComponent::Aos tex;
+			tex.offset = Float2::Aos(0, 0);
+			tex.dimensions = Float2::Aos(100.f + float(rand() % 200), 100.f + float(rand() % 200));
+			tex.texId = dorito;
+			renderTextureSystem->AddComponent(entity, tex);
 		}
 		else
 		{
-			MovementComponent::Aos move;
-			move.speed = 500.f;
-			moveSystem->AddComponent(entity, move);
-			//TextureComponent::Aos tex;
-			//tex.texture = renderer->LoadTexture("../Textures/GhostBram.png");
-			//tex.width = 128.f;
-			//tex.height = 128.f;
-			//textureSystem->AddComponent(entity, tex);
+			transform.pos.z = 1;
+			transformSystem->AddComponent(entity, transform);
+			RenderTextureComponent::Aos tex;
+			tex.offset = Float2::Aos(0, 0);
+			tex.dimensions = Float2::Aos(100.f + float(rand() % 200), 100.f + float(rand() % 200));
+			tex.texId = bram;
+			renderTextureSystem->AddComponent(entity, tex);
 		}
 	}
 
@@ -96,18 +125,14 @@ int wmain(int argc, char *argv[])
 		inputManager->ResetTriggerInputs();
 		eventManager->Clear();
 		
-		backEnd.Update();
-
-		//renderer->Display();
-		//renderer->ClearBackground();
+		renderQueue.Flush();
+		renderBackEnd.Update();
 	}
 
 	//CleanUp
-	//renderer->CleanUp();
-	backEnd.CleanUp();
+	renderBackEnd.CleanUp();
 	systemManager.CleanUp();
 	eventManager->Clear();
-	Renderer::DeleteInstance();
 	TimeManager::DeleteInstance();
 	InputManager::DeleteInstance();
 	EventManager::DeleteInstance();

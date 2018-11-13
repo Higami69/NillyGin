@@ -160,13 +160,20 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="POD.h" />
     <ClInclude Include="RenderBackEnd.h" />
+    <ClInclude Include="RenderEllipseComponent.h" />
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="RenderLineComponent.h" />
+    <ClInclude Include="RenderPointComponent.h" />
     <ClInclude Include="RenderQueue.h" />
-    <ClInclude Include="RenderRectComponent.h" />
+    <ClInclude Include="RenderRectangleComponent.h" />
+    <ClInclude Include="RenderTextureComponent.h" />
+    <ClInclude Include="RenderTriangleComponent.h" />
     <ClInclude Include="Singleton.h" />
+    <ClInclude Include="Structs.h" />
     <ClInclude Include="SystemManager.h" />
     <ClInclude Include="Tests.h" />
     <ClInclude Include="TextureComponent.h" />
+    <ClInclude Include="TextureLibrary.h" />
     <ClInclude Include="TimeManager.h" />
     <ClInclude Include="TransformComponent.h" />
     <ClInclude Include="TransformComponentSystem.h" />
@@ -185,11 +192,17 @@
     </ClCompile>
     <ClCompile Include="POD.cpp" />
     <ClCompile Include="RenderBackEnd.cpp" />
+    <ClCompile Include="RenderEllipseComponent.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="RenderLineComponent.cpp" />
+    <ClCompile Include="RenderPointComponent.cpp" />
     <ClCompile Include="RenderQueue.cpp" />
-    <ClCompile Include="RenderRectComponent.cpp" />
+    <ClCompile Include="RenderRectangleComponent.cpp" />
+    <ClCompile Include="RenderTextureComponent.cpp" />
+    <ClCompile Include="RenderTriangleComponent.cpp" />
     <ClCompile Include="SystemManager.cpp" />
     <ClCompile Include="TextureComponent.cpp" />
+    <ClCompile Include="TextureLibrary.cpp" />
     <ClCompile Include="TimeManager.cpp" />
     <ClCompile Include="TransformComponentSystem.cpp" />
   </ItemGroup>

@@ -16,7 +16,7 @@ struct TextureComponent
 	};
 };
 
-DEFINE_SOA_CLASS(TextureComponent, 3)
+DEFINE_SOA_CLASS(TextureComponent, 3, 0)
 DEFINE_SOA_TYPE(TextureComponent,0,GLuint,texture)
 DEFINE_SOA_TYPE(TextureComponent,1,float,width)
 DEFINE_SOA_TYPE(TextureComponent,2,float,height)
@@ -29,7 +29,7 @@ public:
 	void OnUpdate(TextureComponent::Soa* component, size_t entity) override;
 	void OnLateUpdate(TextureComponent::Soa* component, size_t entity) override;
 	void OnCleanUp(TextureComponent::Soa* component) override;
-	void OnDraw(const TextureComponent::Aos& component, TransformComponent::Aos transform) override;
+	void OnDraw(RenderQueue* renderQueue, const TextureComponent::Aos& component, TransformComponent::Aos transform) override;
 
 private:
 };

@@ -34,16 +34,16 @@ void TransformComponentSystem::OnLateUpdate(TransformComponent::Soa* component, 
 				switch(event->dir)
 				{
 				case Direction::DOWN:
-					*component->yPos -= event->distance;
+					*component->pos->y -= event->distance;
 					break;
 				case Direction::LEFT:
-					*component->xPos -= event->distance;
+					*component->pos->x -= event->distance;
 					break;
 				case Direction::RIGHT:
-					*component->xPos += event->distance;
+					*component->pos->x += event->distance;
 					break;
 				case Direction::UP:
-					*component->yPos += event->distance;
+					*component->pos->y += event->distance;
 					break;
 				}
 			break;
@@ -56,7 +56,7 @@ void TransformComponentSystem::OnCleanUp(TransformComponent::Soa* component)
 {
 }
 
-void TransformComponentSystem::OnDraw(const TransformComponent::Aos& component, TransformComponent::Aos transform)
+void TransformComponentSystem::OnDraw(RenderQueue* renderQueue, const TransformComponent::Aos& component, TransformComponent::Aos transform)
 {
 }
 

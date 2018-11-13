@@ -15,7 +15,7 @@ struct InputTestComponent
 	};
 };
 
-DEFINE_SOA_CLASS(InputTestComponent,1)
+DEFINE_SOA_CLASS(InputTestComponent,1, 0)
 DEFINE_SOA_TYPE(InputTestComponent,0,char,c)
 
 class InputTestComponentSystem : public ComponentSystem<InputTestComponent>

@@ -11,6 +11,8 @@
 #define RENDER_SYSTEM 0x0001u
 #define TRANSFORM_SYSTEM 0x0002u
 
+class RenderQueue;
+
 class ComponentSystemInterface
 {
 public:
@@ -32,6 +34,7 @@ public:
 	virtual ~ComponentSystem();
 
 	void Initialize(EntityManager* entityManager,SystemManager* systemManager, size_t flags = 0u);
+	void SetRenderQueue(RenderQueue* renderQueue);
 
 	void AddComponent(size_t entity, const typename T::Aos& component);
 
@@ -45,7 +48,7 @@ public:
 	virtual void OnUpdate(typename T::Soa* component, size_t entity) = 0;
 	virtual void OnLateUpdate(typename T::Soa* component, size_t entity) = 0;
 	virtual void OnCleanUp(typename T::Soa* component) = 0;
-	virtual void OnDraw(const typename T::Aos& component, TransformComponent::Aos transform) = 0;
+	virtual void OnDraw(RenderQueue* renderQueue, const typename T::Aos& component, TransformComponent::Aos transform) = 0;
 
 protected:
 	DataBlockSoa<T> m_Components;
@@ -59,6 +62,7 @@ private:
 
 	EntityManager* m_pEntityManager;
 	SystemManager* m_pSystemManager;
+	RenderQueue* m_pRenderQueue = nullptr;
 };
 
 template <typename T>
@@ -94,6 +98,12 @@ void ComponentSystem<T>::Initialize(EntityManager* entityManager, SystemManager*
 }
 
 template <typename T>
+void ComponentSystem<T>::SetRenderQueue(RenderQueue* renderQueue)
+{
+	m_pRenderQueue = renderQueue;
+}
+
+template <typename T>
 void ComponentSystem<T>::AddComponent(size_t entity, const typename T::Aos& component)
 {
 	size_t compIdx = m_Components.Add(component);
@@ -116,9 +126,12 @@ void ComponentSystem<T>::Update()
 			m_CompsToDelete.push_back(i);
 		}
 
+		typename T::Soa soaStruct{};
+		m_Components.FillSoaDefault(&soaStruct);
+
 		for(size_t i : m_ValidComps)
 		{
-			OnUpdate(&m_Components.GetSoa(i), m_EntityComponentLinks[i]);
+			OnUpdate(m_Components.GetSoa(&soaStruct, i), m_EntityComponentLinks[i]);
 		}
 	}
 }
@@ -128,9 +141,12 @@ void ComponentSystem<T>::LateUpdate()
 {
 	if (m_Components.GetSize() > 0)
 	{
+		typename T::Soa soaStruct;
+		m_Components.FillSoaDefault(&soaStruct);
+
 		for (size_t i : m_ValidComps)
 		{
-			OnLateUpdate(&m_Components.GetSoa(i), m_EntityComponentLinks[i]);
+			OnLateUpdate(m_Components.GetSoa(&soaStruct, i), m_EntityComponentLinks[i]);
 		}
 
 		m_ValidComps.clear();
@@ -141,9 +157,12 @@ void ComponentSystem<T>::LateUpdate()
 template <typename T>
 void ComponentSystem<T>::CleanUp()
 {
+	typename T::Soa soaStruct;
+	m_Components.FillSoaDefault(&soaStruct);
+
 	for (size_t i = 0; i < m_Components.GetSize(); ++i)
 	{
-		OnCleanUp(&m_Components.GetSoa(i));
+		OnCleanUp(m_Components.GetSoa(&soaStruct, i));
 	}
 }
 
@@ -165,7 +184,7 @@ void ComponentSystem<T>::Draw()
 
 		for (size_t i : m_ValidComps)
 		{
-			OnDraw(m_Components.GetAos(i), m_pSystemManager->GetTransform(m_EntityComponentLinks[i]));
+			OnDraw(m_pRenderQueue, m_Components.GetAos(i), m_pSystemManager->GetTransform(m_EntityComponentLinks[i]));
 		}
 
 		m_ValidComps.clear();

@@ -13,7 +13,7 @@ struct MovementComponent
 	};
 };
 
-DEFINE_SOA_CLASS(MovementComponent,1)
+DEFINE_SOA_CLASS(MovementComponent,1, 0)
 DEFINE_SOA_TYPE(MovementComponent,0,float,speed)
 
 class MovementComponentSystem : public ComponentSystem<MovementComponent>
@@ -25,7 +25,7 @@ public:
 	void OnUpdate(MovementComponent::Soa* component, size_t entity) override;
 	void OnLateUpdate(MovementComponent::Soa* component, size_t entity) override;
 	void OnCleanUp(MovementComponent::Soa* component) override;
-	void OnDraw(const MovementComponent::Aos& component, TransformComponent::Aos transform) override;
+	void OnDraw(RenderQueue* renderQueue, const MovementComponent::Aos& component, TransformComponent::Aos transform) override;
 
 private:
 };

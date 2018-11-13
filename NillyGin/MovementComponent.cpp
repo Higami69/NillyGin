@@ -50,6 +50,6 @@ void MovementComponentSystem::OnCleanUp(MovementComponent::Soa* component)
 {
 }
 
-void MovementComponentSystem::OnDraw(const MovementComponent::Aos& component, TransformComponent::Aos transform)
+void MovementComponentSystem::OnDraw(RenderQueue* renderQueue, const MovementComponent::Aos& component, TransformComponent::Aos transform)
 {
 }

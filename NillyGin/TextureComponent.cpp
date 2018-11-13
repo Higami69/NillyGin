@@ -18,7 +18,6 @@ void TextureComponentSystem::OnCleanUp(TextureComponent::Soa* component)
 {
 }
 
-void TextureComponentSystem::OnDraw(const TextureComponent::Aos& component, TransformComponent::Aos transform)
+void TextureComponentSystem::OnDraw(RenderQueue* renderQueue, const TextureComponent::Aos& component, TransformComponent::Aos transform)
 {
-	Renderer::GetInstance()->DrawTexture(component.texture, Float2(transform.xPos, transform.yPos), component.width, component.height);
 }
