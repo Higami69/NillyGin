@@ -38,8 +38,10 @@ class RenderEllipseComponentSystem : public ComponentSystem<RenderEllipseCompone
 public:
 	RenderEllipseComponentSystem();
 
-	void OnUpdate(RenderEllipseComponent::Soa* component, size_t entity) override;
-	void OnLateUpdate(RenderEllipseComponent::Soa* component, size_t entity) override;
+	void OnInitialize(EventManager* eventManager, const RenderEllipseComponent::Aos& component, size_t entity) override;
+	void OnPostInitialize(std::multimap<size_t, Event*>::_Pairii events, RenderEllipseComponent::Soa* component, size_t entity) override;
+	void OnUpdate(EventManager* eventManager, const RenderEllipseComponent::Aos& component, size_t entity) override;
+	void OnLateUpdate(std::multimap<size_t, Event*>::_Pairii events, RenderEllipseComponent::Soa* component, size_t entity) override;
 	void OnCleanUp(RenderEllipseComponent::Soa* component) override;
 	void OnDraw(RenderQueue* renderQueue, const RenderEllipseComponent::Aos& component, TransformComponent::Aos transform) override;
 

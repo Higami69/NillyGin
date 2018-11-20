@@ -2,11 +2,19 @@
 #include "RenderTextureComponent.h"
 #include "RenderQueue.h"
 
-void RenderTextureComponentSystem::OnUpdate(RenderTextureComponent::Soa* component, size_t entity)
+void RenderTextureComponentSystem::OnInitialize(EventManager* eventManager, const RenderTextureComponent::Aos& component, size_t entity)
 {
 }
 
-void RenderTextureComponentSystem::OnLateUpdate(RenderTextureComponent::Soa* component, size_t entity)
+void RenderTextureComponentSystem::OnPostInitialize(std::multimap<size_t, Event*>::_Pairii events, RenderTextureComponent::Soa* component, size_t entity)
+{
+}
+
+void RenderTextureComponentSystem::OnUpdate(EventManager* eventManager, const RenderTextureComponent::Aos& component, size_t entity)
+{
+}
+
+void RenderTextureComponentSystem::OnLateUpdate(std::multimap<size_t, Event*>::_Pairii events, RenderTextureComponent::Soa* component, size_t entity)
 {
 }
 

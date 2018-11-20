@@ -4,6 +4,7 @@
 #include "TransformComponent.h"
 #include <algorithm>
 #include "TransformComponentSystem.h"
+#include <iostream>
 
 void SystemManager::AddSystem(ComponentSystemInterface* system)
 {
@@ -31,13 +32,61 @@ void SystemManager::AddRenderSystem(ComponentSystemInterface* system)
 	m_pRenderSystems.push_back(system);
 }
 
+void SystemManager::Initialize()
+{
+	//Initialize
+	m_Threads.push_back(std::thread(&ComponentSystemInterface::InitializeComps, m_pTransformSystem));
+	for(size_t i = 0; i < m_pSystems.size(); i++)
+	{
+		m_Threads.push_back(std::thread(&ComponentSystemInterface::InitializeComps, m_pSystems[i]));
+	}
+	for(size_t i = 0; i < m_pRenderSystems.size(); i++)
+	{
+		m_Threads.push_back(std::thread(&ComponentSystemInterface::InitializeComps, m_pRenderSystems[i]));
+	}
+
+	for(size_t i = 0; i < m_Threads.size(); i++)
+	{
+		m_Threads[i].join();
+	}
+	m_Threads.clear();
+
+	//PostInitialize
+	m_Threads.push_back(std::thread(&ComponentSystemInterface::PostInitializeComps, m_pTransformSystem));
+	for (size_t i = 0; i < m_pSystems.size(); i++)
+	{
+		m_Threads.push_back(std::thread(&ComponentSystemInterface::PostInitializeComps, m_pSystems[i]));
+	}
+	for (size_t i = 0; i < m_pRenderSystems.size(); i++)
+	{
+		m_Threads.push_back(std::thread(&ComponentSystemInterface::PostInitializeComps, m_pRenderSystems[i]));
+	}
+
+	for (size_t i = 0; i < m_Threads.size(); i++)
+	{
+		m_Threads[i].join();
+	}
+	m_Threads.clear();
+
+	//Draw statics
+	for(size_t i = 0; i < m_pRenderSystems.size(); i++)
+	{
+		m_Threads.push_back(std::thread(&ComponentSystemInterface::DrawStatic, m_pRenderSystems[i]));
+	}
+	for(size_t i = 0; i < m_Threads.size();i++)
+	{
+		m_Threads[i].join();
+	}
+	m_Threads.clear();
+}
+
 void SystemManager::Update()
 {
 	//Update
 	auto thread = std::thread(&ComponentSystemInterface::Update, m_pTransformSystem);
-	for(size_t i = 0; i < m_pSystems.size();i++)
+	for (size_t i = 0; i < m_pSystems.size(); i++)
 	{
-		m_Threads.push_back(std::thread(&ComponentSystemInterface::Update,m_pSystems[i]));
+		m_Threads.push_back(std::thread(&ComponentSystemInterface::Update, m_pSystems[i]));
 	}
 	for (size_t i = 0; i < m_Threads.size(); i++)
 	{
@@ -60,10 +109,15 @@ void SystemManager::Update()
 	m_Threads.clear();
 
 	//Draw
-	for (size_t i =0;i < m_pRenderSystems.size(); i++)
+	for (size_t i = 0;i < m_pRenderSystems.size(); i++)
 	{
-		m_pRenderSystems[i]->Draw();
+		m_Threads.push_back(std::thread(&ComponentSystemInterface::Draw, m_pRenderSystems[i]));
 	}
+	for(size_t i = 0; i < m_Threads.size(); i++)
+	{
+		m_Threads[i].join();
+	}
+	m_Threads.clear();
 }
 
 void SystemManager::CleanUp()
@@ -99,4 +153,9 @@ void SystemManager::CleanUp()
 TransformComponent::Aos SystemManager::GetTransform(size_t entity)
 {
 	return ((TransformComponentSystem*)m_pTransformSystem)->GetTransform(entity);
+}
+
+TransformComponent::Aos SystemManager::GetTransformStatic(size_t entity)
+{
+	return((TransformComponentSystem*)m_pTransformSystem)->GetTransformStatic(entity);
 }

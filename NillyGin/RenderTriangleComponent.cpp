@@ -6,11 +6,19 @@ RenderTriangleComponentSystem::RenderTriangleComponentSystem()
 {
 }
 
-void RenderTriangleComponentSystem::OnUpdate(RenderTriangleComponent::Soa* component, size_t entity)
+void RenderTriangleComponentSystem::OnInitialize(EventManager* eventManager, const RenderTriangleComponent::Aos& component, size_t entity)
 {
 }
 
-void RenderTriangleComponentSystem::OnLateUpdate(RenderTriangleComponent::Soa* component, size_t entity)
+void RenderTriangleComponentSystem::OnPostInitialize(std::multimap<size_t, Event*>::_Pairii events, RenderTriangleComponent::Soa* component, size_t entity)
+{
+}
+
+void RenderTriangleComponentSystem::OnUpdate(EventManager* eventManager, const RenderTriangleComponent::Aos& component, size_t entity)
+{
+}
+
+void RenderTriangleComponentSystem::OnLateUpdate(std::multimap<size_t, Event*>::_Pairii events, RenderTriangleComponent::Soa* component, size_t entity)
 {
 }
 

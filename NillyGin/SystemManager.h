@@ -16,10 +16,12 @@ public:
 	void AddTransformSystem(ComponentSystemInterface* system);
 	void AddRenderSystem(ComponentSystemInterface* system);
 
+	void Initialize();
 	void Update();
 	void CleanUp();
 
 	TransformComponent::Aos GetTransform(size_t entity);
+	TransformComponent::Aos GetTransformStatic(size_t entity);
 
 private:
 	ComponentSystemInterface* m_pTransformSystem = nullptr;

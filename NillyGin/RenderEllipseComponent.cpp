@@ -6,11 +6,19 @@ RenderEllipseComponentSystem::RenderEllipseComponentSystem()
 {
 }
 
-void RenderEllipseComponentSystem::OnUpdate(RenderEllipseComponent::Soa* component, size_t entity)
+void RenderEllipseComponentSystem::OnInitialize(EventManager* eventManager, const RenderEllipseComponent::Aos& component, size_t entity)
 {
 }
 
-void RenderEllipseComponentSystem::OnLateUpdate(RenderEllipseComponent::Soa* component, size_t entity)
+void RenderEllipseComponentSystem::OnPostInitialize(std::multimap<size_t, Event*>::_Pairii events, RenderEllipseComponent::Soa* component, size_t entity)
+{
+}
+
+void RenderEllipseComponentSystem::OnUpdate(EventManager* eventManager, const RenderEllipseComponent::Aos& component, size_t entity)
+{
+}
+
+void RenderEllipseComponentSystem::OnLateUpdate(std::multimap<size_t, Event*>::_Pairii events, RenderEllipseComponent::Soa* component, size_t entity)
 {
 }
 

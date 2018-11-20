@@ -54,9 +54,6 @@
     <ClInclude Include="InputManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Tests.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="EventManager.h">
       <Filter>ECS</Filter>
     </ClInclude>
@@ -65,9 +62,6 @@
     </ClInclude>
     <ClInclude Include="TimeManager.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TextureComponent.h">
-      <Filter>Default Components</Filter>
     </ClInclude>
     <ClInclude Include="Renderer.h">
       <Filter>Rendering</Filter>
@@ -105,6 +99,12 @@
     <ClInclude Include="RenderTextureComponent.h">
       <Filter>Default Components\Render Components</Filter>
     </ClInclude>
+    <ClInclude Include="RigidBodyComponent.h">
+      <Filter>Default Components</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonInitializeEvents.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -133,9 +133,6 @@
     </ClCompile>
     <ClCompile Include="TimeManager.cpp">
       <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TextureComponent.cpp">
-      <Filter>Default Components</Filter>
     </ClCompile>
     <ClCompile Include="Renderer.cpp">
       <Filter>Rendering</Filter>
@@ -169,6 +166,9 @@
     </ClCompile>
     <ClCompile Include="RenderTextureComponent.cpp">
       <Filter>Default Components\Render Components</Filter>
+    </ClCompile>
+    <ClCompile Include="RigidBodyComponent.cpp">
+      <Filter>Default Components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

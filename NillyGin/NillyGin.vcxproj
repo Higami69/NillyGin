@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CommonInitializeEvents.h" />
     <ClInclude Include="ComponentSystem.h" />
     <ClInclude Include="DataBlockSoa.h" />
     <ClInclude Include="EntityManager.h" />
@@ -168,11 +169,10 @@
     <ClInclude Include="RenderRectangleComponent.h" />
     <ClInclude Include="RenderTextureComponent.h" />
     <ClInclude Include="RenderTriangleComponent.h" />
+    <ClInclude Include="RigidBodyComponent.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="Structs.h" />
     <ClInclude Include="SystemManager.h" />
-    <ClInclude Include="Tests.h" />
-    <ClInclude Include="TextureComponent.h" />
     <ClInclude Include="TextureLibrary.h" />
     <ClInclude Include="TimeManager.h" />
     <ClInclude Include="TransformComponent.h" />
@@ -200,8 +200,8 @@
     <ClCompile Include="RenderRectangleComponent.cpp" />
     <ClCompile Include="RenderTextureComponent.cpp" />
     <ClCompile Include="RenderTriangleComponent.cpp" />
+    <ClCompile Include="RigidBodyComponent.cpp" />
     <ClCompile Include="SystemManager.cpp" />
-    <ClCompile Include="TextureComponent.cpp" />
     <ClCompile Include="TextureLibrary.cpp" />
     <ClCompile Include="TimeManager.cpp" />
     <ClCompile Include="TransformComponentSystem.cpp" />

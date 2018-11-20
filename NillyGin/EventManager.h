@@ -9,7 +9,7 @@ struct Event
 	size_t id;
 };
 
-class EventManager : public Singleton<EventManager>
+class EventManager
 {
 public:
 	EventManager() = default;

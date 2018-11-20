@@ -31,8 +31,10 @@ class RenderTextureComponentSystem: public ComponentSystem<RenderTextureComponen
 public:
 	RenderTextureComponentSystem() = default;
 
-	void OnUpdate(RenderTextureComponent::Soa* component, size_t entity) override;
-	void OnLateUpdate(RenderTextureComponent::Soa* component, size_t entity) override;
+	void OnInitialize(EventManager* eventManager, const RenderTextureComponent::Aos& component, size_t entity) override;
+	void OnPostInitialize(std::multimap<size_t, Event*>::_Pairii events, RenderTextureComponent::Soa* component, size_t entity) override;
+	void OnUpdate(EventManager* eventManager, const RenderTextureComponent::Aos& component, size_t entity) override;
+	void OnLateUpdate(std::multimap<size_t, Event*>::_Pairii events, RenderTextureComponent::Soa* component, size_t entity) override;
 	void OnCleanUp(RenderTextureComponent::Soa* component) override;
 	void OnDraw(RenderQueue* renderQueue, const RenderTextureComponent::Aos& component, TransformComponent::Aos transform) override;
 

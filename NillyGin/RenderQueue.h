@@ -319,6 +319,7 @@ public:
 	template<typename T> void AddTask(typename T::Aos& task);
 
 	void Flush();
+	void FlushToPersistent();
 
 private:
 	RenderBackEnd* m_pRenderBackEnd;

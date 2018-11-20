@@ -40,8 +40,10 @@ class RenderRectangleComponentSystem : public ComponentSystem<RenderRectangleCom
 public:
 	RenderRectangleComponentSystem();
 
-	void OnUpdate(RenderRectangleComponent::Soa* component, size_t entity) override;
-	void OnLateUpdate(RenderRectangleComponent::Soa* component, size_t entity) override;
+	void OnInitialize(EventManager* eventManager, const RenderRectangleComponent::Aos& component, size_t entity) override;
+	void OnPostInitialize(std::multimap<size_t, Event*>::_Pairii events, RenderRectangleComponent::Soa* component, size_t entity) override;
+	void OnUpdate(EventManager* eventManager, const RenderRectangleComponent::Aos& component, size_t entity) override;
+	void OnLateUpdate(std::multimap<size_t, Event*>::_Pairii events, RenderRectangleComponent::Soa* component, size_t entity) override;
 	void OnCleanUp(RenderRectangleComponent::Soa* component) override;
 	void OnDraw(RenderQueue* renderQueue, const RenderRectangleComponent::Aos& component, TransformComponent::Aos transform) override;
 private:

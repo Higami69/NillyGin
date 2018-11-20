@@ -37,8 +37,10 @@ class RenderLineComponentSystem : public ComponentSystem<RenderLineComponent>
 public:
 	RenderLineComponentSystem();
 
-	void OnUpdate(RenderLineComponent::Soa* component, size_t entity) override;
-	void OnLateUpdate(RenderLineComponent::Soa* component, size_t entity) override;
+	void OnInitialize(EventManager* eventManager, const RenderLineComponent::Aos& component, size_t entity) override;
+	void OnPostInitialize(std::multimap<size_t, Event*>::_Pairii events, RenderLineComponent::Soa* component, size_t entity) override;
+	void OnUpdate(EventManager* eventManager, const RenderLineComponent::Aos& component, size_t entity) override;
+	void OnLateUpdate(std::multimap<size_t, Event*>::_Pairii events, RenderLineComponent::Soa* component, size_t entity) override;
 	void OnCleanUp(RenderLineComponent::Soa* component) override;
 	void OnDraw(RenderQueue* renderQueue, const RenderLineComponent::Aos& component, TransformComponent::Aos transform) override;
 

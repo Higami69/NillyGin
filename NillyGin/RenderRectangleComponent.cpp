@@ -6,11 +6,19 @@ RenderRectangleComponentSystem::RenderRectangleComponentSystem()
 {
 }
 
-void RenderRectangleComponentSystem::OnUpdate(RenderRectangleComponent::Soa* component, size_t entity)
+void RenderRectangleComponentSystem::OnInitialize(EventManager* eventManager, const RenderRectangleComponent::Aos& component, size_t entity)
 {
 }
 
-void RenderRectangleComponentSystem::OnLateUpdate(RenderRectangleComponent::Soa* component, size_t entity)
+void RenderRectangleComponentSystem::OnPostInitialize(std::multimap<size_t, Event*>::_Pairii events, RenderRectangleComponent::Soa* component, size_t entity)
+{
+}
+
+void RenderRectangleComponentSystem::OnUpdate(EventManager* eventManager, const RenderRectangleComponent::Aos& component, size_t entity)
+{
+}
+
+void RenderRectangleComponentSystem::OnLateUpdate(std::multimap<size_t, Event*>::_Pairii events, RenderRectangleComponent::Soa* component, size_t entity)
 {
 }
 

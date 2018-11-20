@@ -29,8 +29,10 @@ class RenderPointComponentSystem : public ComponentSystem<RenderPointComponent>
 public:
 	RenderPointComponentSystem();
 
-	void OnUpdate(RenderPointComponent::Soa* component, size_t entity) override;
-	void OnLateUpdate(RenderPointComponent::Soa* component, size_t entity) override;
+	void OnInitialize(EventManager* eventManager, const RenderPointComponent::Aos& component, size_t entity) override;
+	void OnPostInitialize(std::multimap<size_t, Event*>::_Pairii events, RenderPointComponent::Soa* component, size_t entity) override;
+	void OnUpdate(EventManager* eventManager, const RenderPointComponent::Aos& component, size_t entity) override;
+	void OnLateUpdate(std::multimap<size_t, Event*>::_Pairii events, RenderPointComponent::Soa* component, size_t entity) override;
 	void OnCleanUp(RenderPointComponent::Soa* component) override;
 	void OnDraw(RenderQueue* renderQueue, const RenderPointComponent::Aos& component, TransformComponent::Aos transform) override;
 

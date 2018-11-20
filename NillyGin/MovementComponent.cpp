@@ -15,34 +15,43 @@ MovementComponentSystem::MovementComponentSystem()
 
 }
 
-void MovementComponentSystem::OnUpdate(MovementComponent::Soa* component, size_t entity)
+void MovementComponentSystem::OnInitialize(EventManager* eventManager, const MovementComponent::Aos& component,
+	size_t entity)
+{
+}
+
+void MovementComponentSystem::OnPostInitialize(std::multimap<size_t, Event*>::_Pairii events,
+	MovementComponent::Soa* component, size_t entity)
+{
+}
+
+void MovementComponentSystem::OnUpdate(EventManager* eventManager, const MovementComponent::Aos& component, size_t entity)
 {
 	auto input = InputManager::GetInstance();
-	auto eventManager = EventManager::GetInstance();
 
 	if(input->IsActive(0))
 	{
 		auto deltaTime = TimeManager::GetInstance()->GetDeltaTime();
-		eventManager->AddEvent("Transform", entity, new MoveEvent(Direction::LEFT,*component->speed * deltaTime ));
+		eventManager->AddEvent("Transform", entity, new MoveEvent(Direction::LEFT,component.speed * deltaTime ));
 	}
 	if (input->IsActive(1))
 	{
 		auto deltaTime = TimeManager::GetInstance()->GetDeltaTime();
-		eventManager->AddEvent("Transform", entity, new MoveEvent(Direction::RIGHT, *component->speed * deltaTime));
+		eventManager->AddEvent("Transform", entity, new MoveEvent(Direction::RIGHT, component.speed * deltaTime));
 	}
 	if (input->IsActive(2))
 	{
 		auto deltaTime = TimeManager::GetInstance()->GetDeltaTime();
-		eventManager->AddEvent("Transform", entity, new MoveEvent(Direction::UP, *component->speed * deltaTime));
+		eventManager->AddEvent("Transform", entity, new MoveEvent(Direction::UP, component.speed * deltaTime));
 	}
 	if (input->IsActive(3))
 	{
 		auto deltaTime = TimeManager::GetInstance()->GetDeltaTime();
-		eventManager->AddEvent("Transform", entity, new MoveEvent(Direction::DOWN, *component->speed * deltaTime));
+		eventManager->AddEvent("Transform", entity, new MoveEvent(Direction::DOWN, component.speed * deltaTime));
 	}
 }
 
-void MovementComponentSystem::OnLateUpdate(MovementComponent::Soa* component, size_t entity)
+void MovementComponentSystem::OnLateUpdate(std::multimap<size_t, Event*>::_Pairii events, MovementComponent::Soa* component, size_t entity)
 {
 }
 

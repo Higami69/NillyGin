@@ -43,8 +43,10 @@ class RenderTriangleComponentSystem : public ComponentSystem<RenderTriangleCompo
 public:
 	RenderTriangleComponentSystem();
 
-	void OnUpdate(RenderTriangleComponent::Soa* component, size_t entity) override;
-	void OnLateUpdate(RenderTriangleComponent::Soa* component, size_t entity) override;
+	void OnInitialize(EventManager* eventManager, const RenderTriangleComponent::Aos& component, size_t entity) override;
+	void OnPostInitialize(std::multimap<size_t, Event*>::_Pairii events, RenderTriangleComponent::Soa* component, size_t entity) override;
+	void OnUpdate(EventManager* eventManager, const RenderTriangleComponent::Aos& component, size_t entity) override;
+	void OnLateUpdate(std::multimap<size_t, Event*>::_Pairii events, RenderTriangleComponent::Soa* component, size_t entity) override;
 	void OnCleanUp(RenderTriangleComponent::Soa* component) override;
 	void OnDraw(RenderQueue* renderQueue, const RenderTriangleComponent::Aos& component, TransformComponent::Aos transform) override;
 

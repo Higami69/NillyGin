@@ -6,11 +6,21 @@ RenderLineComponentSystem::RenderLineComponentSystem()
 {
 }
 
-void RenderLineComponentSystem::OnUpdate(RenderLineComponent::Soa* component, size_t entity)
+void RenderLineComponentSystem::OnInitialize(EventManager* eventManager, const RenderLineComponent::Aos& component,
+	size_t entity)
 {
 }
 
-void RenderLineComponentSystem::OnLateUpdate(RenderLineComponent::Soa* component, size_t entity)
+void RenderLineComponentSystem::OnPostInitialize(std::multimap<size_t, Event*>::_Pairii events,
+	RenderLineComponent::Soa* component, size_t entity)
+{
+}
+
+void RenderLineComponentSystem::OnUpdate(EventManager* eventManager, const RenderLineComponent::Aos& component, size_t entity)
+{
+}
+
+void RenderLineComponentSystem::OnLateUpdate(std::multimap<size_t, Event*>::_Pairii events, RenderLineComponent::Soa* component, size_t entity)
 {
 }
 

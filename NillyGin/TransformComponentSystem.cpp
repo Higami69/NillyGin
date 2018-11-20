@@ -6,26 +6,24 @@ MoveEvent::MoveEvent(Direction dir, float dist)
 {
 }
 
-TransformComponentSystem::TransformComponentSystem()
-{
-	EventManager::GetInstance()->AddQueue("Transform");
-}
-
-void TransformComponentSystem::OnUpdate(TransformComponent::Soa* component, size_t entity)
+void TransformComponentSystem::OnInitialize(EventManager* eventManager, const TransformComponent::Aos& component, size_t entity)
 {
 }
 
-void TransformComponentSystem::OnLateUpdate(TransformComponent::Soa* component, size_t entity)
+void TransformComponentSystem::OnPostInitialize(std::multimap < size_t, Event*>::_Pairii events, TransformComponent::Soa* component, size_t entity)
 {
-	auto eventSystem = EventManager::GetInstance();
-	auto queue = eventSystem->GetEventQueue("Transform");
-	auto range = queue.equal_range(entity);
+}
 
-	auto it = range.first;
+void TransformComponentSystem::OnUpdate(EventManager* eventManager, const TransformComponent::Aos& component, size_t entity)
+{
+}
+
+void TransformComponentSystem::OnLateUpdate(std::multimap < size_t, Event*>::_Pairii events, TransformComponent::Soa* component, size_t entity)
+{
+
+	auto it = events.first;
 	do
 	{
-		if (it == queue.end()) return;
-
 		switch(it->second->id)
 		{
 		case 0: //MoveEvent
@@ -49,7 +47,7 @@ void TransformComponentSystem::OnLateUpdate(TransformComponent::Soa* component, 
 			break;
 			}
 		}
-	} while (it++ != range.second);
+	} while (it++ != events.second);
 }
 
 void TransformComponentSystem::OnCleanUp(TransformComponent::Soa* component)
@@ -63,4 +61,9 @@ void TransformComponentSystem::OnDraw(RenderQueue* renderQueue, const TransformC
 TransformComponent::Aos TransformComponentSystem::GetTransform(size_t entity)
 {
 	return m_Components.GetAos(GetComponentIndex(entity));
+}
+
+TransformComponent::Aos TransformComponentSystem::GetTransformStatic(size_t entity)
+{
+	return m_StaticComponents.GetAos(GetComponentIndexStatic(entity));
 }

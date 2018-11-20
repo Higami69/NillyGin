@@ -6,11 +6,19 @@ RenderPointComponentSystem::RenderPointComponentSystem()
 {
 }
 
-void RenderPointComponentSystem::OnUpdate(RenderPointComponent::Soa* component, size_t entity)
+void RenderPointComponentSystem::OnInitialize(EventManager* eventManager, const RenderPointComponent::Aos& component, size_t entity)
 {
 }
 
-void RenderPointComponentSystem::OnLateUpdate(RenderPointComponent::Soa* component, size_t entity)
+void RenderPointComponentSystem::OnPostInitialize(std::multimap<size_t, Event*>::_Pairii events, RenderPointComponent::Soa* component, size_t entity)
+{
+}
+
+void RenderPointComponentSystem::OnUpdate(EventManager* eventManager, const RenderPointComponent::Aos& component, size_t entity)
+{
+}
+
+void RenderPointComponentSystem::OnLateUpdate(std::multimap<size_t, Event*>::_Pairii events, RenderPointComponent::Soa* component, size_t entity)
 {
 }
 

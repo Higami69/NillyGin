@@ -19,6 +19,7 @@ RenderQueue::RenderQueue()
 {
 	m_pFrontBuffer = new RenderTaskBuffer();
 	m_pBackBuffer = new RenderTaskBuffer();
+	m_FrontBufferActive = true;
 }
 
 RenderQueue::~RenderQueue()
@@ -48,5 +49,12 @@ void RenderQueue::Flush()
 	}
 
 	m_FrontBufferActive = !m_FrontBufferActive;
+}
+
+void RenderQueue::FlushToPersistent()
+{
+	m_pRenderBackEnd->SetPersistentBuffer(m_pFrontBuffer);
+
+	m_pFrontBuffer = new RenderTaskBuffer();
 }
 

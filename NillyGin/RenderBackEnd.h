@@ -16,6 +16,7 @@ public:
 
 	void Update();
 	void SetNextBuffer(RenderTaskBuffer* buffer);
+	void SetPersistentBuffer(RenderTaskBuffer* buffer);
 
 	SDL_GLContext GetContext() const;
 	SDL_Window* GetWindow() const;
@@ -24,9 +25,12 @@ private:
 	void UpdateThread();
 	void CleanUpThread();
 
+	void DrawBuffer(RenderTaskBuffer* buffer);
+
 	SDL_Window* m_pWindow = nullptr;
 	SDL_GLContext m_GlContext;
 	std::thread m_RenderThread;
 
 	RenderTaskBuffer *m_pCurrentBuffer, *m_pNextBuffer; //TODO: Change to queue of buffers?
+	RenderTaskBuffer *m_pPersistentBuffer; //Tasks that will never change
 };
