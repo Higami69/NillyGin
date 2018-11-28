@@ -151,7 +151,7 @@ void ComponentSystem<T>::PostInitializeComps()
 		for (size_t i = 0; i < m_Components.GetSize(); ++i)
 		{
 			auto events = eventQueue.equal_range(m_EntityComponentLinks[i]);
-			if (events.first == eventQueue.end()) continue;
+			if (events.first == events.second) continue;
 
 			OnPostInitialize(events, m_Components.GetSoa(&soaStruct,i), m_EntityComponentLinks[i]);
 		}
@@ -161,13 +161,14 @@ void ComponentSystem<T>::PostInitializeComps()
 		{
 			eventQueue = m_pEventManager->GetEventQueue("Static");
 
+			size_t staticIdx = 0;
 			for(size_t i = 0; i < m_Components.GetSize(); i++)
 			{
 				auto events = eventQueue.equal_range(m_EntityComponentLinks[i]);
-				if (events.first == eventQueue.end()) continue;
+				if (events.first == events.second) continue;
 
 				m_StaticComponents.Add(m_Components.GetAos(i));
-				m_StaticEntityComponentLinks[i] = m_EntityComponentLinks[i];
+				m_StaticEntityComponentLinks[staticIdx++] = m_EntityComponentLinks[i];
 				m_CompsToDelete.push_back(i);
 			}
 			CollectGarbage();
@@ -211,7 +212,7 @@ void ComponentSystem<T>::LateUpdate()
 		for (size_t i : m_ValidComps)
 		{
 			auto events = eventQueue.equal_range(m_EntityComponentLinks[i]);
-			if (events.first == eventQueue.end()) continue;
+			if (events.first == events.second) continue;
 
 			OnLateUpdate(events, m_Components.GetSoa(&soaStruct, i), m_EntityComponentLinks[i]);
 		}
@@ -314,16 +315,19 @@ void ComponentSystem<T>::CollectGarbage()
 {
 	while(m_CompsToDelete.size() > 0)
 	{
-		size_t last;
-		size_t idx = m_CompsToDelete[0];
-		do
+		auto idx = m_CompsToDelete.back();
+		m_CompsToDelete.pop_back();
+		size_t last = m_Components.Remove(idx);
+		m_EntityComponentLinks[idx] = m_EntityComponentLinks[last];
+		m_EntityComponentLinks.erase(m_EntityComponentLinks.find(last));
+
+		while(std::find(m_CompsToDelete.begin(), m_CompsToDelete.end(), last) != m_CompsToDelete.end())
 		{
+			idx = last;
 			last = m_Components.Remove(idx);
+			m_CompsToDelete.erase(std::remove(m_CompsToDelete.begin(), m_CompsToDelete.end(), idx));
 			m_EntityComponentLinks[idx] = m_EntityComponentLinks[last];
 			m_EntityComponentLinks.erase(m_EntityComponentLinks.find(last));
-			m_CompsToDelete.erase(std::remove(m_CompsToDelete.begin(), m_CompsToDelete.end(), idx));
-			idx = last;
-		} while (std::find(m_CompsToDelete.begin(), m_CompsToDelete.end(), last) != m_CompsToDelete.end());
+		}
 	}
-	m_CompsToDelete.clear();
 }

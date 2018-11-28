@@ -156,7 +156,9 @@
     <ClInclude Include="DataBlockSoa.h" />
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="EventManager.h" />
+    <ClInclude Include="GameScene.h" />
     <ClInclude Include="InputManager.h" />
+    <ClInclude Include="Main.h" />
     <ClInclude Include="MovementComponent.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="POD.h" />
@@ -170,9 +172,11 @@
     <ClInclude Include="RenderTextureComponent.h" />
     <ClInclude Include="RenderTriangleComponent.h" />
     <ClInclude Include="RigidBodyComponent.h" />
+    <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="Structs.h" />
     <ClInclude Include="SystemManager.h" />
+    <ClInclude Include="TestScene.h" />
     <ClInclude Include="TextureLibrary.h" />
     <ClInclude Include="TimeManager.h" />
     <ClInclude Include="TransformComponent.h" />
@@ -182,7 +186,9 @@
     <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="EventManager.cpp" />
     <ClCompile Include="GameLoop.cpp" />
+    <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="Main.cpp" />
     <ClCompile Include="MovementComponent.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -201,7 +207,9 @@
     <ClCompile Include="RenderTextureComponent.cpp" />
     <ClCompile Include="RenderTriangleComponent.cpp" />
     <ClCompile Include="RigidBodyComponent.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SystemManager.cpp" />
+    <ClCompile Include="TestScene.cpp" />
     <ClCompile Include="TextureLibrary.cpp" />
     <ClCompile Include="TimeManager.cpp" />
     <ClCompile Include="TransformComponentSystem.cpp" />

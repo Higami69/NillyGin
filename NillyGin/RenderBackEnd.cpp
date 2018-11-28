@@ -30,18 +30,18 @@ void RenderBackEnd::CleanUp()
 	SDL_Quit();
 }
 
-void RenderBackEnd::Update()
+void RenderBackEnd::PauseThread()
 {
-	if(m_RenderThread.joinable()) m_RenderThread.join();
+	if (m_RenderThread.joinable()) m_RenderThread.join();
 
-	if (m_pCurrentBuffer != nullptr)
-	{
-		m_pCurrentBuffer->Free();
-	}
+	if (m_pCurrentBuffer != nullptr) m_pCurrentBuffer->Free();
 
 	m_pCurrentBuffer = m_pNextBuffer;
 	m_pNextBuffer = nullptr;
+}
 
+void RenderBackEnd::ResumeThread()
+{
 	m_RenderThread = std::thread(&RenderBackEnd::UpdateThread, this);
 }
 

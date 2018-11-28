@@ -16,14 +16,20 @@
     <Filter Include="Default Components">
       <UniqueIdentifier>{93dfe2e8-40a2-413e-af4b-ab68717fb86a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Test Components">
-      <UniqueIdentifier>{7f99c9d3-31d9-4e45-bccd-ddf5a751ecf0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Rendering">
       <UniqueIdentifier>{97a7aa11-48cd-45f9-9e72-feb1c9017506}</UniqueIdentifier>
     </Filter>
     <Filter Include="Default Components\Render Components">
       <UniqueIdentifier>{cba43077-1aef-4bd6-94d7-299e9d1ece1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ClientSide">
+      <UniqueIdentifier>{fbd46143-0a17-47f4-b592-dbbb87619c3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ClientSide\Test Components">
+      <UniqueIdentifier>{7f99c9d3-31d9-4e45-bccd-ddf5a751ecf0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ClientSide\Test Scenes">
+      <UniqueIdentifier>{04cebe39-2582-4ac5-b114-87c410ca236b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -58,7 +64,7 @@
       <Filter>ECS</Filter>
     </ClInclude>
     <ClInclude Include="MovementComponent.h">
-      <Filter>Test Components</Filter>
+      <Filter>ClientSide\Test Components</Filter>
     </ClInclude>
     <ClInclude Include="TimeManager.h">
       <Filter>Header Files</Filter>
@@ -105,6 +111,18 @@
     <ClInclude Include="CommonInitializeEvents.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Main.h">
+      <Filter>ClientSide</Filter>
+    </ClInclude>
+    <ClInclude Include="TestScene.h">
+      <Filter>ClientSide\Test Scenes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -129,7 +147,7 @@
       <Filter>ECS</Filter>
     </ClCompile>
     <ClCompile Include="MovementComponent.cpp">
-      <Filter>Test Components</Filter>
+      <Filter>ClientSide\Test Components</Filter>
     </ClCompile>
     <ClCompile Include="TimeManager.cpp">
       <Filter>Header Files</Filter>
@@ -169,6 +187,18 @@
     </ClCompile>
     <ClCompile Include="RigidBodyComponent.cpp">
       <Filter>Default Components</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScene.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>ClientSide</Filter>
+    </ClCompile>
+    <ClCompile Include="TestScene.cpp">
+      <Filter>ClientSide\Test Scenes</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -47,7 +47,7 @@ void TransformComponentSystem::OnLateUpdate(std::multimap < size_t, Event*>::_Pa
 			break;
 			}
 		}
-	} while (it++ != events.second);
+	} while (++it != events.second);
 }
 
 void TransformComponentSystem::OnCleanUp(TransformComponent::Soa* component)

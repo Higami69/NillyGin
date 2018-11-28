@@ -17,6 +17,8 @@
 #include "RenderTextureComponent.h"
 #include "TextureLibrary.h"
 #include "RigidBodyComponent.h"
+#include "SceneManager.h"
+#include "Main.h"
 
 
 int wmain(int argc, char *argv[])
@@ -29,81 +31,49 @@ int wmain(int argc, char *argv[])
 	auto inputManager = InputManager::GetInstance();
 	auto eventManager = EventManager{};
 	auto timeManager = TimeManager::GetInstance();
+	auto sceneManager = SceneManager::GetInstance();
 
 	RenderBackEnd renderBackEnd{};
 	renderBackEnd.Initialize();
 	RenderQueue renderQueue{};
 	renderQueue.Initialize(&renderBackEnd);
+	sceneManager->Initialize(&entityManager);
 
 	//Construct built in systems (so they're added to the systemManager)
 #pragma region Built-In Systems
-	auto transformSystem = new TransformComponentSystem();
-	transformSystem->Initialize(&entityManager,&systemManager, &eventManager, "Transform", TRANSFORM_SYSTEM | IS_AFFECTED_BY_STATIC);
-	auto moveSystem = new MovementComponentSystem();
-	moveSystem->Initialize(&entityManager,&systemManager, &eventManager, "Move");
-	auto renderPointSystem = new RenderPointComponentSystem();
-	renderPointSystem->Initialize(&entityManager, &systemManager, &eventManager, "RenderPoint", RENDER_SYSTEM | IS_AFFECTED_BY_STATIC);
-	renderPointSystem->SetRenderQueue(&renderQueue);
-	auto renderLineSystem = new RenderLineComponentSystem();
-	renderLineSystem->Initialize(&entityManager, &systemManager, &eventManager, "RenderLine", RENDER_SYSTEM | IS_AFFECTED_BY_STATIC);
-	renderLineSystem->SetRenderQueue(&renderQueue);
-	auto renderTriangleSystem = new RenderTriangleComponentSystem();
-	renderTriangleSystem->Initialize(&entityManager, &systemManager, &eventManager, "RenderTriangle", RENDER_SYSTEM | IS_AFFECTED_BY_STATIC);
-	renderTriangleSystem->SetRenderQueue(&renderQueue);
-	auto renderRectangleSystem = new RenderRectangleComponentSystem();
-	renderRectangleSystem->Initialize(&entityManager, &systemManager, &eventManager, "RenderRectangle", RENDER_SYSTEM | IS_AFFECTED_BY_STATIC);
-	renderRectangleSystem->SetRenderQueue(&renderQueue);
-	auto renderEllipseSystem = new RenderEllipseComponentSystem();
-	renderEllipseSystem->Initialize(&entityManager, &systemManager, &eventManager, "RenderEllipse", RENDER_SYSTEM | IS_AFFECTED_BY_STATIC);
-	renderEllipseSystem->SetRenderQueue(&renderQueue);
-	auto renderTextureSystem = new RenderTextureComponentSystem();
-	renderTextureSystem->Initialize(&entityManager, &systemManager, &eventManager, "RenderTexture", RENDER_SYSTEM | IS_AFFECTED_BY_STATIC);
-	renderTextureSystem->SetRenderQueue(&renderQueue);
-	auto rigidBodySystem = new RigidBodyComponentSystem();
-	rigidBodySystem->Initialize(&entityManager, &systemManager, &eventManager, "RigidBody");
+	DefaultSystems systems{};
+	systems.transformSystem = new TransformComponentSystem();
+	systems.transformSystem->Initialize(&entityManager,&systemManager, &eventManager, "Transform", TRANSFORM_SYSTEM | IS_AFFECTED_BY_STATIC);
+	systems.renderPointSystem = new RenderPointComponentSystem();
+	systems.renderPointSystem->Initialize(&entityManager, &systemManager, &eventManager, "RenderPoint", RENDER_SYSTEM | IS_AFFECTED_BY_STATIC);
+	systems.renderPointSystem->SetRenderQueue(&renderQueue);
+	systems.renderLineSystem = new RenderLineComponentSystem();
+	systems.renderLineSystem->Initialize(&entityManager, &systemManager, &eventManager, "RenderLine", RENDER_SYSTEM | IS_AFFECTED_BY_STATIC);
+	systems.renderLineSystem->SetRenderQueue(&renderQueue);
+	systems.renderTriangleSystem = new RenderTriangleComponentSystem();
+	systems.renderTriangleSystem->Initialize(&entityManager, &systemManager, &eventManager, "RenderTriangle", RENDER_SYSTEM | IS_AFFECTED_BY_STATIC);
+	systems.renderTriangleSystem->SetRenderQueue(&renderQueue);
+	systems.renderRectangleSystem = new RenderRectangleComponentSystem();
+	systems.renderRectangleSystem->Initialize(&entityManager, &systemManager, &eventManager, "RenderRectangle", RENDER_SYSTEM | IS_AFFECTED_BY_STATIC);
+	systems.renderRectangleSystem->SetRenderQueue(&renderQueue);
+	systems.renderEllipseSystem = new RenderEllipseComponentSystem();
+	systems.renderEllipseSystem->Initialize(&entityManager, &systemManager, &eventManager, "RenderEllipse", RENDER_SYSTEM | IS_AFFECTED_BY_STATIC);
+	systems.renderEllipseSystem->SetRenderQueue(&renderQueue);
+	systems.renderTextureSystem = new RenderTextureComponentSystem();
+	systems.renderTextureSystem->Initialize(&entityManager, &systemManager, &eventManager, "RenderTexture", RENDER_SYSTEM | IS_AFFECTED_BY_STATIC);
+	systems.renderTextureSystem->SetRenderQueue(&renderQueue);
+	systems.rigidBodySystem = new RigidBodyComponentSystem();
+	systems.rigidBodySystem->Initialize(&entityManager, &systemManager, &eventManager, "RigidBody");
 #pragma endregion
 
 	SDL_GL_MakeCurrent(renderBackEnd.GetWindow(), renderBackEnd.GetContext());
 
-	TextureLibrary texLib{};
-	auto bram = texLib.LoadTexture("../Textures/GhostBram.png",GL_NEAREST);
-	auto dorito = texLib.LoadTexture("../Textures/Dorito.png", GL_NEAREST);
+	ClientMain::Initialize(&entityManager, &systemManager, &eventManager, systems);
+	sceneManager->HandleLoading();
 
 	SDL_GL_MakeCurrent(0, 0);
 
-	for(int i = 0; i < 1000; i++)
-	{
-		auto entity = entityManager.Create();
-		RigidBodyComponent::Aos rigidBody;
-		rigidBody.isStatic = true;
-		rigidBodySystem->AddComponent(entity, rigidBody);
-		TransformComponent::Aos transform;
-		transform.pos.x = float(rand() % 600);
-		transform.pos.y = float(rand() % 500);
-
-		if(i > 499)
-		{
-			transform.pos.z = 1;
-			transformSystem->AddComponent(entity, transform);
-			RenderTextureComponent::Aos tex;
-			tex.offset = Float2::Aos(0, 0);
-			tex.dimensions = Float2::Aos(100.f + float(rand() % 200), 100.f + float(rand() % 200));
-			tex.texId = dorito;
-			renderTextureSystem->AddComponent(entity, tex);
-		}
-		else
-		{
-			transform.pos.z = 0;
-			transformSystem->AddComponent(entity, transform);
-			RenderTextureComponent::Aos tex;
-			tex.offset = Float2::Aos(0, 0);
-			tex.dimensions = Float2::Aos(100.f + float(rand() % 200), 100.f + float(rand() % 200));
-			tex.texId = bram;
-			renderTextureSystem->AddComponent(entity, tex);
-		}
-	}
-
-	//Iniialize components
+	//Initialize components
 	systemManager.Initialize();
 	renderQueue.FlushToPersistent();
 
@@ -134,7 +104,11 @@ int wmain(int argc, char *argv[])
 		eventManager.Clear();
 		
 		renderQueue.Flush();
-		renderBackEnd.Update();
+		renderBackEnd.PauseThread();
+		SDL_GL_MakeCurrent(renderBackEnd.GetWindow(), renderBackEnd.GetContext());
+		sceneManager->HandleLoading();
+		SDL_GL_MakeCurrent(0, 0);
+		renderBackEnd.ResumeThread();
 	}
 
 	//CleanUp

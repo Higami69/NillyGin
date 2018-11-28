@@ -14,7 +14,8 @@ public:
 	void Initialize();
 	void CleanUp();
 
-	void Update();
+	void PauseThread();
+	void ResumeThread();
 	void SetNextBuffer(RenderTaskBuffer* buffer);
 	void SetPersistentBuffer(RenderTaskBuffer* buffer);
 
